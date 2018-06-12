@@ -81,9 +81,13 @@ class Macro
         const Scenario::IntervalModel&);
 
     void insertInInterval(
-        QJsonObject&& sourceInterval,
-        const IntervalModel& targetInterval,
+        QJsonObject&& data,
+        const IntervalModel& interval,
         ExpandMode mode);
+
+    void insertInState(
+        QJsonObject&& data,
+        const StateModel& state);
 
     void createSlot(
         const Scenario::IntervalModel& interval);

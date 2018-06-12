@@ -24,6 +24,7 @@
 #include <Scenario/Application/ScenarioApplicationPlugin.hpp>
 #include <Scenario/Application/ScenarioEditionSettings.hpp>
 #include <Scenario/Commands/Cohesion/DoForSelectedIntervals.hpp>
+#include <Scenario/Commands/CommandAPI.hpp>
 #include <Scenario/Commands/Interval/InsertContentInInterval.hpp>
 #include <Scenario/Commands/Scenario/Encapsulate.hpp>
 #include <Scenario/Commands/Scenario/ScenarioPasteContent.hpp>
@@ -509,18 +510,14 @@ static void writeJsonToScenario(
     const ObjectMenuActions& self,
     const QJsonObject& obj)
 {
-  MacroCommandDispatcher<Command::ScenarioPasteContent> dispatcher{
-      self.dispatcher().stack()};
+  Scenario::Command::Macro d{new Command::ScenarioPasteContent, self.dispatcher().stack().context()};
   auto selectedIntervals = selectedElements(getIntervals(scen));
   auto expandMode = self.appPlugin()->editionSettings().expandMode();
   for (const auto& json_vref : obj["Intervals"].toArray())
   {
     for (const auto& interval : selectedIntervals)
     {
-      auto cmd = new Scenario::Command::InsertContentInInterval{
-          json_vref.toObject(), *interval, expandMode};
-
-      dispatcher.submitCommand(cmd);
+      d.insertInInterval(json_vref.toObject(), *interval, expandMode);
     }
   }
 
@@ -529,14 +526,11 @@ static void writeJsonToScenario(
   {
     for (const auto& state : selectedStates)
     {
-      auto cmd
-          = new Command::InsertContentInState{json_vref.toObject(), *state};
-
-      dispatcher.submitCommand(cmd);
+      d.insertInState(json_vref.toObject(), *state);
     }
   }
 
-  dispatcher.commit();
+  d.commit();
 }
 
 void ObjectMenuActions::writeJsonToSelectedElements(const QJsonObject& obj)

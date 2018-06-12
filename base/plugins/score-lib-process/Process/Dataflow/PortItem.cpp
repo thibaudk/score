@@ -13,6 +13,8 @@
 #include <score/model/path/PathSerialization.hpp>
 #include <score/selection/SelectionDispatcher.hpp>
 #include <wobjectimpl.h>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 W_OBJECT_IMPL(Dataflow::PortItem)
 
 template class SCORE_LIB_PROCESS_EXPORT tsl::hopscotch_map<
@@ -169,18 +171,98 @@ void PortItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
   event->accept();
 }
 
+struct DraggedCable final
+    : public QGraphicsItem
+{
+  public:
+    DraggedCable()
+    {
+      //setAcceptHoverEvents(true);
+      grabMouse();
+      setZValue(12312313);
+    }
+    QPointF start;
+    QPointF end;
+  QRectF size;
+  void setRect(QPointF s, QPointF e)
+  {
+    prepareGeometryChange();
+    start = s;
+    end = e;
+    size = QRectF(s, e);
+    update();
+  }
+
+  QRectF boundingRect() const override
+  {
+    return size.adjusted(-200, -200, 200, 200);
+  }
+  void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override
+  {
+    painter->setPen(Qt::white);
+    painter->setBrush(Qt::transparent);
+    painter->drawRect(boundingRect());
+    painter->drawLine(size.topLeft(), size.bottomRight());
+  }
+
+  QPainterPath shape() const override
+  {
+    QPainterPath p;
+    p.moveTo(size.topLeft());
+    p.lineTo(size.bottomRight());
+    QPainterPathStroker s;
+    s.setWidth(25);
+    return s.createStroke(p);
+  }
+  void mousePressEvent(QGraphicsSceneMouseEvent* event) override
+  {
+    std::cerr << "hover enter\n";
+    event->accept();
+  }
+  /*
+  void mouseLeaveEvent(QGraphicsSceneMouseEvent* event) override
+  {    std::cerr << "hover leave\n";
+
+    event->accept();
+  }*/
+  void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override
+  {    std::cerr << "hover move\n";
+
+    setRect(start, event->scenePos());
+    event->accept();
+  }
+
+  void mouseReleaseEvent(QGraphicsSceneEvent*)
+  {
+    ungrabMouse();
+  }
+};
+static DraggedCable* g_draggedCable{};
 void PortItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
   event->accept();
   if (QLineF(pos(), event->pos()).length() > QApplication::startDragDistance())
   {
-    QDrag* d{new QDrag{this}};
-    QMimeData* m = new QMimeData;
+    if(g_draggedCable)
+      return;
+
+    //QDrag* d{new QDrag{this}};
+    //QMimeData* m = new QMimeData;
+    g_draggedCable = new DraggedCable;
+    g_draggedCable->setRect(event->scenePos(), event->scenePos() + QPointF{10, 10});
+    this->scene()->addItem(g_draggedCable);
+
+    //connect(this->scene()->views()[0], &QGraphicsView::)
     clickedPort = this;
-    m->setData(score::mime::port(), {});
-    d->setMimeData(m);
-    d->exec();
-    connect(d, &QDrag::destroyed, this, [] { clickedPort = nullptr; });
+    //m->setData(score::mime::port(), {});
+    //d->setMimeData(m);
+
+    //d->exec();
+    //connect(d, &QDrag::destroyed, this, [=] {
+    //  clickedPort = nullptr;
+    //  this->scene()->removeItem(g_draggedCable);
+    //  delete g_draggedCable;
+    //});
   }
 }
 

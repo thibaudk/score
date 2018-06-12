@@ -1,5 +1,6 @@
 #include <Scenario/Commands/CommandAPI.hpp>
 #include <Scenario/Commands/Interval/MoveProcess.hpp>
+#include <Scenario/Commands/State/InsertContentInState.hpp>
 #include <score_plugin_scenario_commands_files.hpp>
 
 namespace Scenario { namespace Command {
@@ -248,6 +249,14 @@ void Macro::insertInInterval(
     , ExpandMode mode)
 {
   auto cmd = new InsertContentInInterval{std::move(json), itv, mode};
+  m.submitCommand(cmd);
+}
+
+void Macro::insertInState(
+    QJsonObject&& json
+    , const StateModel& itv)
+{
+  auto cmd = new InsertContentInState{std::move(json), itv};
   m.submitCommand(cmd);
 }
 

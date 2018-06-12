@@ -230,8 +230,21 @@ QPainterPath CableItem::shape() const
 
 void CableItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-  clicked();
-  event->accept();
+  if(m_p1 && m_p2)
+  {
+    auto p1 = m_p1->scenePos();
+    auto p2 = m_p2->scenePos();
+
+    if((event->scenePos() - p1).manhattanLength() >= 10
+    && (event->scenePos() - p2).manhattanLength() >= 10)
+    {
+      clicked();
+      event->accept();
+      return;
+    }
+  }
+
+  event->ignore();
 }
 
 void CableItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
