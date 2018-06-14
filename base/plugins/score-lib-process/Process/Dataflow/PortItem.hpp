@@ -62,7 +62,6 @@ public:
   void createCable(PortItem* src, PortItem* snk) W_SIGNAL(createCable, src, snk);
   void contextMenuRequested(QPointF scenepos, QPoint pos) W_SIGNAL(contextMenuRequested, scenepos, pos);
 
-protected:
   QRectF boundingRect() const final override;
   void paint(
       QPainter* painter,

@@ -177,8 +177,7 @@ struct DraggedCable final
   public:
     DraggedCable()
     {
-      //setAcceptHoverEvents(true);
-      grabMouse();
+      setAcceptHoverEvents(true);
       setZValue(12312313);
     }
     QPointF start;
@@ -195,7 +194,7 @@ struct DraggedCable final
 
   QRectF boundingRect() const override
   {
-    return size.adjusted(-200, -200, 200, 200);
+    return size.adjusted(-2000, -2000, 2000, 2000);
   }
   void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override
   {
@@ -205,42 +204,65 @@ struct DraggedCable final
     painter->drawLine(size.topLeft(), size.bottomRight());
   }
 
-  QPainterPath shape() const override
+  void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override
   {
-    QPainterPath p;
-    p.moveTo(size.topLeft());
-    p.lineTo(size.bottomRight());
-    QPainterPathStroker s;
-    s.setWidth(25);
-    return s.createStroke(p);
-  }
-  void mousePressEvent(QGraphicsSceneMouseEvent* event) override
-  {
-    std::cerr << "hover enter\n";
     event->accept();
   }
-  /*
-  void mouseLeaveEvent(QGraphicsSceneMouseEvent* event) override
-  {    std::cerr << "hover leave\n";
 
+  PortItem* hovered_port{};
+
+  void hoverLeaveEvent(QGraphicsSceneHoverEvent* event) override
+  {
     event->accept();
-  }*/
-  void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override
-  {    std::cerr << "hover move\n";
+  }
+  void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override
+  {
 
     setRect(start, event->scenePos());
+    auto items = scene()->items(event->scenePos());
+
+    bool hovered_one = false;
+    for(auto item : items)
+    {
+      if(auto p = dynamic_cast<PortItem*>(item))
+      {
+        if(hovered_port && p != hovered_port)
+        {
+          QGraphicsSceneDragDropEvent dg;
+          hovered_port->dragLeaveEvent(&dg);
+          hovered_port = nullptr;
+        }
+
+        QGraphicsSceneDragDropEvent dg;
+        p->dragEnterEvent(&dg);
+        hovered_port = p;
+        hovered_one = true;
+        break;
+      }
+    }
+
+    if(!hovered_one && hovered_port)
+    {
+      QGraphicsSceneDragDropEvent dg;
+      hovered_port->dragLeaveEvent(&dg);
+      hovered_port = nullptr;
+    }
+
     event->accept();
   }
 
-  void mouseReleaseEvent(QGraphicsSceneEvent*)
+  void mousePressEvent(QGraphicsSceneMouseEvent* e) override
   {
-    ungrabMouse();
+    e->ignore();
+  }
+  void mouseReleaseEvent(QGraphicsSceneMouseEvent* e) override
+  {
+    e->ignore();
   }
 };
 static DraggedCable* g_draggedCable{};
 void PortItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
-  event->accept();
   if (QLineF(pos(), event->pos()).length() > QApplication::startDragDistance())
   {
     if(g_draggedCable)
@@ -254,6 +276,8 @@ void PortItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 
     //connect(this->scene()->views()[0], &QGraphicsView::)
     clickedPort = this;
+    event->ignore();
+    //g_draggedCable->grabMouse();
     //m->setData(score::mime::port(), {});
     //d->setMimeData(m);
 
