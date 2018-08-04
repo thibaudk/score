@@ -8,7 +8,6 @@ score-lib-state
 score-lib-device
 
 score-plugin-inspector
-score-plugin-deviceexplorer
 score-lib-process
 )
 
