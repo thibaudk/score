@@ -77,6 +77,20 @@ SCORE_LIB_BASE_EXPORT void JSONValueWriter::write(QRectF& pt)
 }
 
 template <>
+SCORE_LIB_BASE_EXPORT void JSONValueReader::read(const QSizeF& pt)
+{
+  val = makeJsonArray({pt.width(), pt.height()});
+}
+
+template <>
+SCORE_LIB_BASE_EXPORT void JSONValueWriter::write(QSizeF& pt)
+{
+  auto arr = val.toArray();
+  pt.setWidth(arr[0].toDouble());
+  pt.setHeight(arr[1].toDouble());
+}
+
+template <>
 SCORE_LIB_BASE_EXPORT void JSONValueReader::read(const QTransform& pt)
 {
   val = makeJsonArray({pt.m11(), pt.m12(), pt.m13(), pt.m21(), pt.m22(),
