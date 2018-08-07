@@ -14,9 +14,7 @@ if(APPLE AND EXISTS /usr/local/opt/qt5)
   list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
 endif()
 
-if(NOT SCORE_CONFIGURATION)
-  set(SCORE_CONFIGURATION developer)
-endif()
+set(SCORE_CONFIGURATION segment)
 include("${SCORE_CONFIGURATION}")
 project(score LANGUAGES C CXX)
 
