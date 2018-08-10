@@ -12,7 +12,8 @@ class SCORE_LIB_BASE_EXPORT Selectable final : public QObject
 {
   W_OBJECT(Selectable)
 public:
-  Selectable()
+  Selectable(QObject* parent = nullptr)
+    : QObject{parent}
   {
     connect(this, &Selectable::set, this, &Selectable::set_impl);
   }
