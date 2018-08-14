@@ -72,6 +72,7 @@ static void setQApplicationSettings(QApplication& m_app)
   qInitResources_score();
 #endif
 
+  /*
   QFontDatabase::addApplicationFont(":/APCCourierBold.otf"); // APCCourier-Bold
   QFontDatabase::addApplicationFont(":/Ubuntu-R.ttf");       // Ubuntu Regular
   QFontDatabase::addApplicationFont(":/Ubuntu-B.ttf");       // Ubuntu Bold
