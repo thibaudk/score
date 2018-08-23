@@ -97,7 +97,8 @@ static void setup_opengl()
   QSurfaceFormat fmt = QSurfaceFormat::defaultFormat();
   fmt.setMajorVersion(4);
   fmt.setMinorVersion(1);
-  fmt.setSamples(1);
+  fmt.setSamples(0);
+  fmt.setSwapInterval(0);
   fmt.setDefaultFormat(fmt);
 #else
   QSurfaceFormat fmt;
