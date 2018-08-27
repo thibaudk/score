@@ -114,7 +114,7 @@ void DocumentManager::init(const score::GUIApplicationContext& ctx)
     m_recentFiles = new QRecentFilesMenu{tr("Recent files"), nullptr};
 
 #if !defined(__EMSCRIPTEN__)
-    QSettings settings("OSSIA", "score");
+    QSettings settings("SEGMent", "SEGMent");
     m_recentFiles->restoreState(settings.value("RecentFiles").toByteArray());
     connect(
         m_recentFiles, &QRecentFilesMenu::recentFileTriggered, this,
@@ -288,10 +288,9 @@ bool DocumentManager::saveDocumentAs(Document& doc)
   if (!m_view)
     return false;
   QFileDialog d{m_view, tr("Save Document As")};
-  QString binFilter{tr("Binary (*.scorebin)")};
-  QString jsonFilter{tr("Score (*.score)")};
+  QString jsonFilter{tr("SEGMent (*.segment)")};
   QStringList filters;
-  filters << jsonFilter << binFilter;
+  filters << jsonFilter;
 
   d.setNameFilters(filters);
   d.setConfirmOverwrite(true);
@@ -306,29 +305,17 @@ bool DocumentManager::saveDocumentAs(Document& doc)
 
     if (!savename.isEmpty())
     {
-      if (suf == binFilter)
-      {
-        if (!savename.contains(".scorebin"))
-          savename += ".scorebin";
-      }
-      else
-      {
-        if (!savename.contains(".scorejson") && !savename.contains(".score"))
-          savename += ".score";
-      }
-
+      if (!savename.contains(".segment"))
+        savename += ".segment";
       QSaveFile f{savename};
       f.open(QIODevice::WriteOnly);
       doc.metadata().setFileName(savename);
-      if (savename.indexOf(".scorebin") != -1)
-        f.write(doc.saveAsByteArray());
-      else
-      {
-        QJsonDocument json_doc;
-        json_doc.setObject(doc.saveAsJson());
 
-        f.write(json_doc.toJson());
-      }
+      QJsonDocument json_doc;
+      json_doc.setObject(doc.saveAsJson());
+
+      f.write(json_doc.toJson());
+
       f.commit();
 
       m_recentFiles->addRecentFile(savename);
@@ -431,7 +418,7 @@ Document* DocumentManager::loadFile(const score::GUIApplicationContext& ctx)
     return nullptr;
 
   QString loadname = QFileDialog::getOpenFileName(
-      m_view, tr("Open"), lastOpenFileName(), "*.scorebin *.score *.scorejson");
+      m_view, tr("Open"), lastOpenFileName(), "*.segment");
   QSettings s; s.setValue("score/last_open_doc", QFileInfo(loadname).absoluteDir().path());
   return loadFile(ctx, loadname);
 }
@@ -441,9 +428,7 @@ Document* DocumentManager::loadFile(
 {
   Document* doc{};
   if (!fileName.isEmpty()
-      && (fileName.indexOf(".scorebin") != -1
-          || fileName.indexOf(".scorejson") != -1
-          || fileName.indexOf(".score") != 1))
+      && (fileName.indexOf(".segment") != 1))
   {
     QFile f{fileName};
     if (f.open(QIODevice::ReadOnly))
@@ -454,29 +439,20 @@ Document* DocumentManager::loadFile(
         saveRecentFilesState();
       }
 
-      if (fileName.indexOf(".scorebin") != -1)
+      auto json = QJsonDocument::fromJson(f.readAll());
+      bool ok = checkAndUpdateJson(json, ctx);
+      if (true || ok)
       {
         doc = loadDocument(
-            ctx, fileName, f.readAll(),
-            *ctx.interfaces<DocumentDelegateList>().begin());
+                ctx, fileName, json.object(),
+                *ctx.interfaces<DocumentDelegateList>().begin());
       }
-      else if (fileName.indexOf(".score") != -1)
+      else
       {
-        auto json = QJsonDocument::fromJson(f.readAll());
-        bool ok = checkAndUpdateJson(json, ctx);
-        if (true || ok)
-        {
-          doc = loadDocument(
-              ctx, fileName, json.object(),
-              *ctx.interfaces<DocumentDelegateList>().begin());
-        }
-        else
-        {
-          QMessageBox::warning(
+        QMessageBox::warning(
               qApp->activeWindow(), tr("Unable to load"),
               tr("Unable to load file : "
                  "There is probably something wrong with the file format."));
-        }
       }
     }
   }
@@ -639,7 +615,7 @@ void DocumentManager::saveRecentFilesState()
 #if !defined(__EMSCRIPTEN__)
   if (m_recentFiles)
   {
-    QSettings settings("OSSIA", "score");
+    QSettings settings("SEGMent", "SEGMent");
     settings.setValue("RecentFiles", m_recentFiles->saveState());
     m_recentFiles->saveState();
   }

@@ -92,8 +92,8 @@ public:
       {
         case Qt::DisplayRole:
           return m_buffer[index.row()].message;
-        case Qt::BackgroundRole:
-          return m_buffer[index.row()].color;
+//        case Qt::BackgroundRole:
+//          return m_buffer[index.row()].color;
       }
     }
 

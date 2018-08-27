@@ -19,11 +19,6 @@ if(SCORE_STATIC_PLUGINS)
   target_link_libraries(${APPNAME} PUBLIC ${SCORE_PLUGINS_LIST})
 endif()
 
-find_package(Qt5 5.7 COMPONENTS QuickControls2)
-if(TARGET Qt5::QuickControls2)
-  target_link_libraries(${APPNAME} PUBLIC score_lib_base Qt5::QuickControls2)
-endif()
-
 if(MSVC)
   set_property(
     TARGET ${APPNAME}
@@ -33,11 +28,11 @@ if(MSVC)
   target_sources(${APPNAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../lib/resources/score.rc")
 endif()
 
+set_target_properties(${APPNAME}
+  PROPERTIES
+    OUTPUT_NAME segment-editor)
 if(UNIX AND NOT APPLE)
   # Linux package is called ossia-score
-  set_target_properties(${APPNAME}
-    PROPERTIES
-      OUTPUT_NAME ossia-score)
 
   target_link_libraries(${APPNAME} PUBLIC X11)
 endif()

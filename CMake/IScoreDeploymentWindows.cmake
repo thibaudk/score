@@ -42,18 +42,23 @@ install(FILES
   "${QT_DLL_DIR}/Qt5Gui${DEBUG_CHAR}.dll"
   "${QT_DLL_DIR}/Qt5Widgets${DEBUG_CHAR}.dll"
   "${QT_DLL_DIR}/Qt5Network${DEBUG_CHAR}.dll"
-  "${QT_DLL_DIR}/Qt5Xml${DEBUG_CHAR}.dll"
+#  "${QT_DLL_DIR}/Qt5Xml${DEBUG_CHAR}.dll"
   "${QT_DLL_DIR}/Qt5Svg${DEBUG_CHAR}.dll"
-  "${QT_DLL_DIR}/Qt5Qml${DEBUG_CHAR}.dll"
-  "${QT_DLL_DIR}/Qt5WebSockets${DEBUG_CHAR}.dll"
-#  "${QT_DLL_DIR}/Qt5Multimedia${DEBUG_CHAR}.dll"
-  "${QT_DLL_DIR}/Qt5SerialPort${DEBUG_CHAR}.dll"
+#  "${QT_DLL_DIR}/Qt5Qml${DEBUG_CHAR}.dll"
+#  "${QT_DLL_DIR}/Qt5WebSockets${DEBUG_CHAR}.dll"
+  "${QT_DLL_DIR}/Qt5Multimedia${DEBUG_CHAR}.dll"
+#  "${QT_DLL_DIR}/Qt5SerialPort${DEBUG_CHAR}.dll"
 #  "${QT_DLL_DIR}/Qt5Test${DEBUG_CHAR}.dll"
-  "${QT_DLL_DIR}/Qt5Quick${DEBUG_CHAR}.dll"
-  "${QT_DLL_DIR}/Qt5QuickWidgets${DEBUG_CHAR}.dll"
-  "${QT_DLL_DIR}/Qt5QuickControls2${DEBUG_CHAR}.dll"
-  "${QT_DLL_DIR}/Qt5QuickTemplates2${DEBUG_CHAR}.dll"
+#  "${QT_DLL_DIR}/Qt5Quick${DEBUG_CHAR}.dll"
+#  "${QT_DLL_DIR}/Qt5QuickWidgets${DEBUG_CHAR}.dll"
+#  "${QT_DLL_DIR}/Qt5QuickControls2${DEBUG_CHAR}.dll"
+#  "${QT_DLL_DIR}/Qt5QuickTemplates2${DEBUG_CHAR}.dll"
   DESTINATION ${SCORE_BIN_INSTALL_DIR})
+install(
+  DIRECTORY
+    "${CMAKE_BINARY_DIR}/Ressources"
+  DESTINATION
+    ${SCORE_BIN_INSTALL_DIR})
 
 # Qt conf file
 install(
@@ -68,75 +73,47 @@ set(QT_PLUGINS_DIR "${QT_DLL_DIR}/../plugins")
 set(QT_QML_PLUGINS_DIR "${QT_DLL_DIR}/../qml")
 set(plugin_dest_dir "${SCORE_BIN_INSTALL_DIR}/plugins")
 
-if(WIN32)
-  if(EXISTS "c:/faust/faust.dll")
-    install(FILES "c:/faust/faust.dll" DESTINATION "${SCORE_BIN_INSTALL_DIR}")
-  endif()
-
-  if(EXISTS "c:/tbb/bin/tbb.dll")
-    install(FILES "c:/tbb/bin/tbb.dll" DESTINATION "${SCORE_BIN_INSTALL_DIR}")
-  endif()
-endif()
 install(FILES "${QT_PLUGINS_DIR}/platforms/qwindows${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/platforms")
 install(FILES "${QT_PLUGINS_DIR}/imageformats/qsvg${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/imagesformats")
 install(FILES "${QT_PLUGINS_DIR}/iconengines/qsvgicon${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/iconengines")
-install(
-  DIRECTORY
-    "${QT_QML_PLUGINS_DIR}/QtQuick"
-    "${QT_QML_PLUGINS_DIR}/QtQuick.2"
-  DESTINATION
-    "${SCORE_BIN_INSTALL_DIR}/qml"
-  PATTERN
-    "*.qmlc" EXCLUDE
- )
+install(FILES "${QT_PLUGINS_DIR}/styles/qwindowsvistastyle${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/styles")
 
-install(CODE "
-    file(GLOB_RECURSE DLLS_TO_REMOVE \"*.dll\")
-    list(FILTER DLLS_TO_REMOVE INCLUDE REGEX \"qml/.*/*dll\")
-    file(REMOVE \${DLLS_TO_REMOVE})
-
-    file(GLOB_RECURSE PDB_TO_REMOVE \"*.pdb\")
-    file(REMOVE \${PDB_TO_REMOVE})
-    ")
-
-install(FILES "${QT_QML_PLUGINS_DIR}/QtQuick.2/qtquick2plugin${DEBUG_CHAR}.dll" DESTINATION "${SCORE_BIN_INSTALL_DIR}/qml/QtQuick.2")
 # NSIS metadata
 set(CPACK_GENERATOR "NSIS")
-set(CPACK_PACKAGE_EXECUTABLES "score.exe;score")
+set(CPACK_PACKAGE_EXECUTABLES "segment-editor.exe;score")
 
 set(CPACK_COMPONENTS_ALL score)
 
 set(CPACK_MONOLITHIC_INSTALL TRUE)
-set(CPACK_NSIS_PACKAGE_NAME "Score")
+set(CPACK_NSIS_PACKAGE_NAME "SEGMent Editor")
 set(CPACK_PACKAGE_ICON "${SCORE_ROOT_SOURCE_DIR}\\\\base\\\\lib\\\\resources\\\\score.ico")
 set(CPACK_NSIS_MUI_ICON "${CPACK_PACKAGE_ICON}")
 set(CPACK_NSIS_MUI_UNIICON "${CPACK_PACKAGE_ICON}")
 
-set(CPACK_NSIS_HELP_LINK "https:\\\\\\\\ossia.io")
-set(CPACK_NSIS_URL_INFO_ABOUT "https:\\\\\\\\ossia.io")
-set(CPACK_NSIS_CONTACT "https:\\\\\\\\gitter.im\\\\OSSIA\\\\score")
+set(CPACK_NSIS_HELP_LINK "https:\\\\\\\\example.com")
+set(CPACK_NSIS_URL_INFO_ABOUT "https:\\\\\\\\example.com")
+set(CPACK_NSIS_CONTACT "https:\\\\\\\\example.com")
 
 set(CPACK_NSIS_COMPRESSOR "/SOLID lzma")
 
 set(CPACK_NSIS_MENU_LINKS
-    "bin/score.exe" "Score"
-    "https://ossia.io" "Score website"
+    "bin/segment-editor.exe" "SEGMent Editor"
     )
 
 
 set(CPACK_NSIS_DEFINES "!include ${CMAKE_CURRENT_LIST_DIR}\\\\Deployment\\\\Windows\\\\FileAssociation.nsh")
 set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
-\\\${registerExtension} '\\\$INSTDIR\\\\bin\\\\score.exe' '.scorejson' 'score score'
+\\\${registerExtension} '\\\$INSTDIR\\\\bin\\\\segment-editor.exe' '.segment' 'SEGMent Game'
 
 SetOutPath '\\\$INSTDIR\\\\bin'
-CreateShortcut '\\\$DESKTOP\\\\score.lnk' '\\\$INSTDIR\\\\bin\\\\score.exe' '' '\\\$INSTDIR\\\\bin\\\\score.ico'
+CreateShortcut '\\\$DESKTOP\\\\segment.lnk' '\\\$INSTDIR\\\\bin\\\\segment-editor.exe' '' '\\\$INSTDIR\\\\bin\\\\score.ico'
 SetRegView 64
-WriteRegStr HKEY_LOCAL_MACHINE 'SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\score.exe' '' '$INSTDIR\\\\bin\\\\score.exe'
-WriteRegStr HKEY_LOCAL_MACHINE 'SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\score.exe' 'Path' '$INSTDIR\\\\bin\\\\;$INSTDIR\\\\bin\\\\plugins\\\\;'
+WriteRegStr HKEY_LOCAL_MACHINE 'SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\segment-editor.exe' '' '$INSTDIR\\\\bin\\\\segment-editor.exe'
+WriteRegStr HKEY_LOCAL_MACHINE 'SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\segment-editor.exe' 'Path' '$INSTDIR\\\\bin\\\\;$INSTDIR\\\\bin\\\\plugins\\\\;'
 ")
 set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
 Delete '$DESKTOP\\\\score.lnk'
-DeleteRegKey HKLM 'Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\score.exe'
-\\\${unregisterExtension} '.scorejson' 'score score'
+DeleteRegKey HKLM 'Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\App Paths\\\\segment-editor.exe'
+\\\${unregisterExtension} '.segment' 'SEGMent Game'
 ")
 

@@ -64,14 +64,12 @@ void ApplicationSettings::parse(QStringList cargs, int& argc, char** argv)
 
 void setQApplicationMetadata()
 {
-  QCoreApplication::setOrganizationName("OSSIA");
-  QCoreApplication::setOrganizationDomain("ossia.io");
-  QCoreApplication::setApplicationName("score");
-  QCoreApplication::setApplicationVersion(QString("%1.%2.%3-%4")
+  QCoreApplication::setOrganizationName("SEGMent");
+  QCoreApplication::setOrganizationDomain("segment.com");
+  QCoreApplication::setApplicationName("SEGMent");
+  QCoreApplication::setApplicationVersion(QString("%1.%2")
                                           .arg(SCORE_VERSION_MAJOR)
-                                          .arg(SCORE_VERSION_MINOR)
-                                          .arg(SCORE_VERSION_PATCH)
-                                          .arg(SCORE_VERSION_EXTRA));
+                                          .arg(SCORE_VERSION_MINOR));
 }
 
 }

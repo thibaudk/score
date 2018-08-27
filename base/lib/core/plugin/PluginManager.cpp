@@ -325,7 +325,7 @@ void loadAddonsInAllFolders(std::vector<score::Addon>& availablePlugins)
 
 QStringList pluginsBlacklist()
 {
-  QSettings s("OSSIA", "score");
+  QSettings s("SEGMent", "SEGMent");
   return s.value("PluginSettings/Blacklist", QStringList{}).toStringList();
 }
 }
