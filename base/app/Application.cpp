@@ -191,13 +191,6 @@ void Application::init()
 #if defined(SCORE_STATIC_PLUGINS)
   score_init_static_plugins();
 #endif
-
-  std::vector<spdlog::sink_ptr> v{spdlog::sinks::stderr_sink_mt::instance(),
-                                  std::make_shared<ossia::qt::log_sink>()};
-
-  ossia::context context{v};
-  ossia::logger().set_level(spdlog::level::debug);
-
   score::setQApplicationMetadata();
 #if !defined(SCORE_DEBUG) && !defined(__EMSCRIPTEN__)
 #  define SCORE_SPLASH_SCREEN 1

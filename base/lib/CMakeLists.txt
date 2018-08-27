@@ -367,7 +367,7 @@ set(SRCS
 
 add_library(score_lib_base ${SRCS} ${HEADERS} ${QRCS})
 target_link_libraries(score_lib_base
-    PUBLIC Qt5::Core Qt5::Widgets ossia # Qt5::Qml Qt5::QuickWidgets
+    PUBLIC Qt5::Core Qt5::Widgets
     PRIVATE Qt5::Svg )
 target_include_directories(score_lib_base PUBLIC 3rdparty/QProgressIndicator)
 target_include_directories(score_lib_base PUBLIC 3rdparty/Qt-Color-Widgets)

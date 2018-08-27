@@ -5,11 +5,115 @@
 #include <ossia/network/base/name_validation.hpp>
 
 #include <QJsonObject>
-#include <ossia-qt/js_utilities.hpp>
+#include <QStringBuilder>
 #include <score/serialization/DataStreamVisitor.hpp>
 #include <score/serialization/JSONVisitor.hpp>
 #include <wobjectimpl.h>
 W_OBJECT_IMPL(score::ModelMetadata)
+
+OSSIA_EXPORT void sanitize_device_name(QString& ret)
+{
+  const QChar underscore = '_';
+  for (auto& c : ret)
+  {
+    if (ossia::net::is_valid_character_for_device(c))
+      continue;
+    else
+      c = underscore;
+  }
+}
+
+OSSIA_EXPORT
+void sanitize_name(QString& ret)
+{
+  const QChar underscore = '_';
+  for (auto& c : ret)
+  {
+    if (ossia::net::is_valid_character_for_name(c))
+      continue;
+    else
+      c = underscore;
+  }
+}
+
+OSSIA_EXPORT
+QString sanitize_name(QString name, const std::vector<QString>& brethren)
+{
+  sanitize_name(name);
+  bool is_here = false;
+  ossia::optional<int> name_instance;
+  ossia::small_vector<int, 16> instance_num;
+  const auto b_size = brethren.size();
+  instance_num.reserve(b_size);
+
+  // First get the root name : the first part of the "a.b"
+  QString root_name = name;
+  {
+    auto pos = name.lastIndexOf('.');
+    if (pos != -1)
+    {
+      bool res = false;
+      name_instance = name.mid(pos + 1).toInt(&res);
+      if (res)
+        root_name = name.mid(0, pos);
+    }
+  }
+
+  const auto root_len = root_name.size();
+  for (const QString& n_name : brethren)
+  {
+    if (n_name == name)
+    {
+      is_here = true;
+    }
+
+    if (n_name.size() < (root_len + 1))
+      continue;
+
+    bool same_root = true;
+    for (int i = 0; i < root_len; i++)
+    {
+      if (n_name[i] != root_name[i])
+      {
+        break;
+        same_root = false;
+      }
+    }
+
+    if (same_root && (n_name[root_len] == '.'))
+    {
+      // Instance
+      bool b = false;
+      int n = n_name.midRef(root_len + 1).toInt(&b);
+      if (b)
+        instance_num.push_back(n);
+    }
+    // case where we have the "default" instance without .0
+    else if (same_root && root_len == n_name.length())
+    {
+      instance_num.push_back(0);
+    }
+  }
+
+  if (!is_here)
+  {
+    return name;
+  }
+  else
+  {
+    auto n = instance_num.size();
+    if ((n == 0) || ((n == 1) && (instance_num[0] == 0)))
+    {
+      return root_name + QStringLiteral(".1");
+    }
+    else
+    {
+      std::sort(instance_num.begin(), instance_num.end());
+      return root_name % "." % QString::number(instance_num.back() + 1);
+    }
+  }
+}
+
 namespace score
 {
 ModelMetadata::ModelMetadata()
@@ -90,34 +194,15 @@ void ModelMetadata::setName(const QString& arg)
       }
     }
 
-    m_scriptingName = ossia::net::sanitize_name(arg, bros);
+    m_scriptingName = sanitize_name(arg, bros);
 
     for(std::size_t i = 0; i < cur_bros_idx; i++)
       bros[i].clear();
-/*
-    auto parent_bros
-        = parent()->parent()->findChildren<IdentifiedObjectAbstract*>(
-            QString{}, Qt::FindDirectChildrenOnly);
-
-    bros.clear();
-    bros.reserve(parent_bros.size());
-    for (auto o : parent_bros)
-    {
-      auto objs = o->findChildren<ModelMetadata*>(
-          QString{}, Qt::FindDirectChildrenOnly);
-      if (!objs.empty())
-      {
-        auto n = objs[0]->getName();
-        if (!n.isEmpty())
-          bros.push_back(std::move(n));
-      }
-    }
-*/
   }
   else
   {
     m_scriptingName = arg;
-    ossia::net::sanitize_name(m_scriptingName);
+    sanitize_name(m_scriptingName);
   }
 
   NameChanged(m_scriptingName);
