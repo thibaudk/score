@@ -368,7 +368,7 @@ set(SRCS
 add_library(score_lib_base ${SRCS} ${HEADERS} ${QRCS})
 target_link_libraries(score_lib_base
     PUBLIC Qt5::Core Qt5::Widgets
-    PRIVATE Qt5::Svg )
+    PRIVATE Qt5::Svg ${CMAKE_DL_LIBS})
 target_include_directories(score_lib_base PUBLIC 3rdparty/QProgressIndicator)
 target_include_directories(score_lib_base PUBLIC 3rdparty/Qt-Color-Widgets)
 target_include_directories(score_lib_base PUBLIC 3rdparty/Qt-Color-Widgets/src)
