@@ -73,9 +73,26 @@ set(QT_PLUGINS_DIR "${QT_DLL_DIR}/../plugins")
 set(QT_QML_PLUGINS_DIR "${QT_DLL_DIR}/../qml")
 set(plugin_dest_dir "${SCORE_BIN_INSTALL_DIR}/plugins")
 
+install(FILES "${QT_PLUGINS_DIR}/audio/qtaudio_wasapi${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/audio")
+install(FILES "${QT_PLUGINS_DIR}/audio/qtaudio_windows${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/audio")
+
 install(FILES "${QT_PLUGINS_DIR}/platforms/qwindows${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/platforms")
-install(FILES "${QT_PLUGINS_DIR}/imageformats/qsvg${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/imagesformats")
+
+install(FILES "${QT_PLUGINS_DIR}/imageformats/qsvg${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/qgif${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/qicns${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/qico${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/qjpeg${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/qtga${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/qtiff${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/qwbmp${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/qwebp${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/imageformats")
+
+install(FILES "${QT_PLUGINS_DIR}/mediaservice/dsengine${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/mediaservice")
+install(FILES "${QT_PLUGINS_DIR}/mediaservice/wmfengine${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/mediaservice")
+
 install(FILES "${QT_PLUGINS_DIR}/iconengines/qsvgicon${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/iconengines")
+
 install(FILES "${QT_PLUGINS_DIR}/styles/qwindowsvistastyle${DEBUG_CHAR}.dll" DESTINATION "${plugin_dest_dir}/styles")
 
 # NSIS metadata
