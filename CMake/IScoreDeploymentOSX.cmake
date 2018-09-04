@@ -3,13 +3,13 @@ if(APPLE)
 set_target_properties(
   ${APPNAME}
   PROPERTIES
-    MACOSX_BUNDLE_INFO_STRING "score, an interactive sequencer for the intermedia arts"
-    MACOSX_BUNDLE_GUI_IDENTIFIER "org.score"
+    MACOSX_BUNDLE_INFO_STRING "SEGMent Editor"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "org.segment.editor"
     MACOSX_BUNDLE_LONG_VERSION_STRING "${SCORE_VERSION}"
-    MACOSX_BUNDLE_BUNDLE_NAME "score"
+    MACOSX_BUNDLE_BUNDLE_NAME "SEGMent Editor"
     MACOSX_BUNDLE_SHORT_VERSION_STRING "${SCORE_VERSION}"
     MACOSX_BUNDLE_BUNDLE_VERSION "${SCORE_VERSION}"
-    MACOSX_BUNDLE_COPYRIGHT "The score team"
+    MACOSX_BUNDLE_COPYRIGHT "The SEGMent team"
     MACOSX_BUNDLE_ICON_FILE "score.icns"
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in"
 )
@@ -71,11 +71,19 @@ set(qtconf_dest_dir "${APPNAME}.app/Contents/Resources")
 set(qml_dest_dir "${APPNAME}.app/Contents/Resources/qml")
 
 install(FILES "${QT_PLUGINS_DIR}/platforms/libqcocoa.dylib" DESTINATION "${plugin_dest_dir}/platforms")
-install(FILES "${QT_PLUGINS_DIR}/imageformats/libqsvg.dylib" DESTINATION "${plugin_dest_dir}/imagesformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/libqsvg.dylib" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/libqgif.dylib" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/libqicns.dylib" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/libqico.dylib" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/libqjpeg.dylib" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/libqtga.dylib" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/libqtiff.dylib" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/libqwbmp.dylib" DESTINATION "${plugin_dest_dir}/imageformats")
+install(FILES "${QT_PLUGINS_DIR}/imageformats/libqwebp.dylib" DESTINATION "${plugin_dest_dir}/imageformats")
 install(FILES "${QT_PLUGINS_DIR}/iconengines/libqsvgicon.dylib" DESTINATION "${plugin_dest_dir}/iconengines")
+install(FILES "${QT_PLUGINS_DIR}/mediaservice/libqavfmediaplayer.dylib" DESTINATION "${plugin_dest_dir}/mediaservice")
+install(FILES "${QT_PLUGINS_DIR}/mediaservice/libqtmedia_audioengine.dylib" DESTINATION "${plugin_dest_dir}/mediaservice")
 install(FILES "${QT_PLUGINS_DIR}/styles/libqmacstyle.dylib" DESTINATION "${plugin_dest_dir}/styles")
-install(FILES "${QT_QML_PLUGINS_DIR}/QtQuick.2/libqtquick2plugin.dylib" DESTINATION "${plugin_dest_dir}/quick")
-install(DIRECTORY "${QT_QML_PLUGINS_DIR}/QtQuick" "${QT_QML_PLUGINS_DIR}/QtQuick.2" DESTINATION "${qml_dest_dir}")
 
 install(CODE "
     file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/qt.conf\" \"[Paths]
@@ -84,32 +92,21 @@ Qml2Imports = Resources/qml
 \")
 " )
 
-# set-up Faust stuff
-if(EXISTS "${CMAKE_BINARY_DIR}/base/plugins/score-plugin-media/faustlibs/src/faustlibs")
-  install(
-    DIRECTORY
-      "${CMAKE_BINARY_DIR}/base/plugins/score-plugin-media/faustlibs-prefix/src/faustlibs/"
-    DESTINATION
-      "${APPNAME}.app/Contents/Frameworks/Faust.framework"
-   )
-endif()
 
 if(SCORE_STATIC_PLUGINS)
     install(CODE "
         file(GLOB_RECURSE QTPLUGINS
             \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/*.dylib\")
-        file(GLOB_RECURSE QMLPLUGINS
-            \"\${CMAKE_INSTALL_PREFIX}/${qml_plugin_dest_dir}/*.dylib\")
         set(BU_CHMOD_BUNDLE_ITEMS ON)
         include(BundleUtilities)
         fixup_bundle(
           \"\${CMAKE_INSTALL_PREFIX}/${APPNAME}.app\"
-          \"\${QTPLUGINS};${QMLPLUGINS}\"
+          \"\${QTPLUGINS}\"
           \"${QT_LIBRARY_DIR}\")
 
       execute_process(COMMAND
                 \"${SCORE_ROOT_SOURCE_DIR}/CMake/Deployment/OSX/set_rpath_static.sh\"
-                \"${CMAKE_INSTALL_PREFIX}/score.app/Contents\")
+                \"${CMAKE_INSTALL_PREFIX}/${APPNAME}.app/Contents\")
         " COMPONENT Runtime)
 else()
     set(CMAKE_INSTALL_RPATH "plugins")
@@ -126,15 +123,15 @@ else()
         set(BU_CHMOD_BUNDLE_ITEMS ON)
         include(BundleUtilities)
         fixup_bundle(
-           \"${CMAKE_INSTALL_PREFIX}/score.app\"
+           \"${CMAKE_INSTALL_PREFIX}/${APPNAME}.app\"
            \"\${QTPLUGINS};${QMLPLUGINS};${SCORE_BUNDLE_INSTALLED_PLUGINS}\"
        \"${QT_LIBRARY_DIR};${CMAKE_BINARY_DIR}/plugins;${CMAKE_INSTALL_PREFIX}/plugins;${CMAKE_BINARY_DIR}/API/OSSIA;${CMAKE_BINARY_DIR}/base/lib;${CMAKE_INSTALL_PREFIX}/${APPNAME}.app/Contents/MacOS/plugins/\"
         )
 message(\"${SCORE_ROOT_SOURCE_DIR}/CMake/Deployment/OSX/set_rpath.sh\"
-          \"${CMAKE_INSTALL_PREFIX}/score.app/Contents\")
+          \"${CMAKE_INSTALL_PREFIX}/${APPNAME}.app/Contents\")
 execute_process(COMMAND
           \"${SCORE_ROOT_SOURCE_DIR}/CMake/Deployment/OSX/set_rpath.sh\"
-          \"${CMAKE_INSTALL_PREFIX}/score.app/Contents\")
+          \"${CMAKE_INSTALL_PREFIX}/${APPNAME}.app/Contents\")
       ")
 endif()
 

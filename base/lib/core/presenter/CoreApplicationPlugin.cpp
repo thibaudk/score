@@ -114,17 +114,13 @@ GUIElements CoreApplicationPlugin::makeGUIElements()
   (void)actions;
 
   menus.reserve(10);
-  auto file = new QMenu{tr("&File")};
-  auto edit = new QMenu{tr("&Edit")};
-  auto object = new QMenu{tr("&Object")};
-  auto play = new QMenu{tr("&Play")};
-  auto view = new QMenu{tr("&View")};
-  auto settings = new QMenu{tr("&Settings")};
-  auto about = new QMenu{tr("&Help")};
+  auto file = new QMenu{tr("&Fichier")};
+  auto edit = new QMenu{tr("&Édition")};
+  auto view = new QMenu{tr("&Vue")};
+  auto settings = new QMenu{tr("&Paramètres")};
+  auto about = new QMenu{tr("&Aide")};
   menus.emplace_back(file, Menus::File(), Menu::is_toplevel{}, 0);
   menus.emplace_back(edit, Menus::Edit(), Menu::is_toplevel{}, 1);
-  menus.emplace_back(object, Menus::Object(), Menu::is_toplevel{}, 2);
-  menus.emplace_back(play, Menus::Play(), Menu::is_toplevel{}, 3);
   menus.emplace_back(view, Menus::View(), Menu::is_toplevel{}, 5);
   menus.emplace_back(settings, Menus::Settings(), Menu::is_toplevel{}, 6);
 
@@ -136,7 +132,7 @@ GUIElements CoreApplicationPlugin::makeGUIElements()
   auto export_menu = new QMenu{tr("&Export")};
   menus.emplace_back(export_menu, Menus::Export());
 
-  auto windows_menu = new QMenu{tr("&Windows")};
+  auto windows_menu = new QMenu{tr("&Fenêtres")};
   menus.emplace_back(windows_menu, Menus::Windows());
 
   ////// File //////
@@ -262,14 +258,6 @@ GUIElements CoreApplicationPlugin::makeGUIElements()
       e.actions.add<Actions::OpenSettings>(settings_act);
       settings->addAction(settings_act);
     }
-    {
-      auto settings_act = new QAction(m_presenter.view());
-      connect(
-          settings_act, &QAction::triggered, this,
-          &CoreApplicationPlugin::openProjectSettings);
-      e.actions.add<Actions::OpenProjectSettings>(settings_act);
-      settings->addAction(settings_act);
-    }
 
     ////// About /////
     {
@@ -278,47 +266,6 @@ GUIElements CoreApplicationPlugin::makeGUIElements()
           help_act, &QAction::triggered, this, &CoreApplicationPlugin::help);
       e.actions.add<Actions::Help>(help_act);
       about->addAction(help_act);
-    }
-
-    {
-      auto about_act = new QAction(m_presenter.view());
-      connect(
-          about_act, &QAction::triggered, this, &CoreApplicationPlugin::about);
-      e.actions.add<Actions::About>(about_act);
-      about->addAction(about_act);
-    }
-
-    {
-      auto doc_act = new QAction(m_presenter.view());
-      connect(
-            doc_act, &QAction::triggered, this,
-            [] {
-         QDesktopServices::openUrl(QUrl("https://ossia.github.io/score/"));
-      });
-      e.actions.add<Actions::Documentation>(doc_act);
-      about->addAction(doc_act);
-    }
-
-    {
-      auto issues_act = new QAction(m_presenter.view());
-      connect(
-            issues_act, &QAction::triggered, this,
-            [] {
-         QDesktopServices::openUrl(QUrl("https://github.com/OSSIA/score/issues"));
-      });
-      e.actions.add<Actions::Issues>(issues_act);
-      about->addAction(issues_act);
-    }
-
-    {
-      auto forum_act = new QAction(m_presenter.view());
-      connect(
-            forum_act, &QAction::triggered, this,
-            [] {
-         QDesktopServices::openUrl(QUrl("http://forum.ossia.io/"));
-      });
-      e.actions.add<Actions::Forum>(forum_act);
-      about->addAction(forum_act);
     }
   }
 

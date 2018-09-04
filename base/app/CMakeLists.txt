@@ -4,7 +4,7 @@ project(score_app LANGUAGES CXX)
 score_common_setup()
 score_write_static_plugins_header()
 enable_testing()
-set(APPNAME "score")
+set(APPNAME "segment-editor")
 set(CMAKE_POSITION_INDEPENDENT_CODE 1)
 # TODO strip symbols after deployment build
 

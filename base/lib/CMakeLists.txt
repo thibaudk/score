@@ -352,7 +352,7 @@ set(SRCS
 # "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Qt-Color-Widgets/src/bound_color_selector.cpp"
 "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Qt-Color-Widgets/src/color_palette_widget.cpp"
 "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Qt-Color-Widgets/src/color_palette_model.cpp"
-# "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Qt-Color-Widgets/src/color_2d_slider.cpp"
+"${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Qt-Color-Widgets/src/color_2d_slider.cpp"
 # "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Qt-Color-Widgets/src/abstract_widget_list.cpp"
 # "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Qt-Color-Widgets/src/color_delegate.cpp"
 "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/Qt-Color-Widgets/src/color_utils.cpp"
