@@ -86,7 +86,7 @@ setup_score_common_exe_features(${APPNAME})
 install(
   TARGETS ${APPNAME}
   BUNDLE DESTINATION .
-  RUNTIME DESTINATION bin)
+  RUNTIME DESTINATION .)
 
 include(UnityApp.cmake)
 include(IScoreDeployment)
