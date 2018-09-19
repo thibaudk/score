@@ -83,7 +83,9 @@ install(FILES "${QT_PLUGINS_DIR}/imageformats/libqwebp.dylib" DESTINATION "${plu
 install(FILES "${QT_PLUGINS_DIR}/iconengines/libqsvgicon.dylib" DESTINATION "${plugin_dest_dir}/iconengines")
 install(FILES "${QT_PLUGINS_DIR}/mediaservice/libqavfmediaplayer.dylib" DESTINATION "${plugin_dest_dir}/mediaservice")
 install(FILES "${QT_PLUGINS_DIR}/mediaservice/libqtmedia_audioengine.dylib" DESTINATION "${plugin_dest_dir}/mediaservice")
-install(FILES "${QT_PLUGINS_DIR}/styles/libqmacstyle.dylib" DESTINATION "${plugin_dest_dir}/styles")
+if(EXISTS ${QT_PLUGINS_DIR}/styles/libqmacstyle.dylib)
+  install(FILES "${QT_PLUGINS_DIR}/styles/libqmacstyle.dylib" DESTINATION "${plugin_dest_dir}/styles")
+endif()
 
 install(CODE "
     file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/qt.conf\" \"[Paths]
