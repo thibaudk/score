@@ -59,7 +59,6 @@ void GUIApplicationInterface::loadPluginData(
       std::make_unique<score::SerializableComponentFactoryList>());
   auto panels = std::make_unique<score::PanelDelegateFactoryList>();
   panels->insert(std::make_unique<score::UndoPanelDelegateFactory>());
-  panels->insert(std::make_unique<score::MessagesPanelDelegateFactory>());
   registrar.registerFactory(std::move(panels));
   registrar.registerFactory(
       std::make_unique<score::DocumentPluginFactoryList>());
