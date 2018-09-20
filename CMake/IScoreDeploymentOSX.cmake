@@ -87,6 +87,8 @@ if(EXISTS ${QT_PLUGINS_DIR}/styles/libqmacstyle.dylib)
   install(FILES "${QT_PLUGINS_DIR}/styles/libqmacstyle.dylib" DESTINATION "${plugin_dest_dir}/styles")
 endif()
 
+install(FILES "${QT_PLUGINS_DIR}/sqldrivers/libqsqlite.dylib" DESTINATION "${plugin_dest_dir}/sqldrivers")
+
 install(CODE "
     file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/qt.conf\" \"[Paths]
 Plugins = PlugIns
