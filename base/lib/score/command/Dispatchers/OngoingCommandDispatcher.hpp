@@ -35,7 +35,7 @@ public:
     if (!m_cmd)
     {
       stack().disableActions();
-      m_cmd.reset(new TheCommand{std::forward<Args>(args)...});
+      m_cmd.reset(new TheCommand(std::forward<Args>(args)...));
       m_cmd->redo(stack().context());
     }
     else
