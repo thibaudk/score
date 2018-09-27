@@ -117,12 +117,12 @@ GUIElements CoreApplicationPlugin::makeGUIElements()
   auto file = new QMenu{tr("&Fichier")};
   auto edit = new QMenu{tr("&Édition")};
   auto view = new QMenu{tr("&Vue")};
-  auto settings = new QMenu{tr("&Paramètres")};
+  //auto settings = new QMenu{tr("&Paramètres")};
   auto about = new QMenu{tr("&Aide")};
   menus.emplace_back(file, Menus::File(), Menu::is_toplevel{}, 0);
   menus.emplace_back(edit, Menus::Edit(), Menu::is_toplevel{}, 1);
   menus.emplace_back(view, Menus::View(), Menu::is_toplevel{}, 5);
-  menus.emplace_back(settings, Menus::Settings(), Menu::is_toplevel{}, 6);
+  //menus.emplace_back(settings, Menus::Settings(), Menu::is_toplevel{}, 6);
 
   // Menus are by default at int_max - 1 so that they will be sorted before
   menus.emplace_back(
@@ -194,34 +194,6 @@ GUIElements CoreApplicationPlugin::makeGUIElements()
 
     file->addSeparator();
 
-    file->addMenu(export_menu);
-#ifdef SCORE_DEBUG
-    // Add command stack import / export
-    {
-      auto loadStack_act = new QAction(m_presenter.view());
-      connect(
-          loadStack_act, &QAction::triggered, this,
-          &CoreApplicationPlugin::loadStack);
-      actions.emplace_back(
-          loadStack_act, tr("&Load a stack"), "LoadStack", "Common",
-          QKeySequence::UnknownKey);
-      export_menu->addAction(loadStack_act);
-    }
-
-    {
-      auto saveStack_act = new QAction(m_presenter.view());
-      connect(
-          saveStack_act, &QAction::triggered, this,
-          &CoreApplicationPlugin::saveStack);
-      actions.emplace_back(
-          saveStack_act, tr("&Save a stack"), "SaveStack", "Common",
-          QKeySequence::UnknownKey);
-      export_menu->addAction(saveStack_act);
-    }
-#endif
-
-    file->addSeparator();
-
     {
       auto close_act = new QAction(m_presenter.view());
       connect(
@@ -249,24 +221,6 @@ GUIElements CoreApplicationPlugin::makeGUIElements()
       windows_menu->addAction(act);
     }
 
-    ////// Settings //////
-    {
-      auto settings_act = new QAction(m_presenter.view());
-      connect(
-          settings_act, &QAction::triggered, this,
-          &CoreApplicationPlugin::openSettings);
-      e.actions.add<Actions::OpenSettings>(settings_act);
-      settings->addAction(settings_act);
-    }
-
-    ////// About /////
-    {
-      auto help_act = new QAction(m_presenter.view());
-      connect(
-          help_act, &QAction::triggered, this, &CoreApplicationPlugin::help);
-      e.actions.add<Actions::Help>(help_act);
-      about->addAction(help_act);
-    }
   }
 
   return e;

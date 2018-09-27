@@ -71,45 +71,6 @@ static void setQApplicationSettings(QApplication& m_app)
 #if defined(SCORE_STATIC_PLUGINS)
   qInitResources_score();
 #endif
-
-  /*
-  QFontDatabase::addApplicationFont(":/APCCourierBold.otf"); // APCCourier-Bold
-  QFontDatabase::addApplicationFont(":/Ubuntu-R.ttf");       // Ubuntu Regular
-  QFontDatabase::addApplicationFont(":/Ubuntu-B.ttf");       // Ubuntu Bold
-  QFontDatabase::addApplicationFont(":/Ubuntu-L.ttf");       // Ubuntu Light
-  QFontDatabase::addApplicationFont(":/Catamaran-Regular.ttf"); // Catamaran Regular
-  QFontDatabase::addApplicationFont(":/Montserrat-Regular.ttf");       // Montserrat
-
-  QFile stylesheet_file{":/qsimpledarkstyle.qss"};//":/qdarkstyle/qdarkstyle.qss"};
-  stylesheet_file.open(QFile::ReadOnly);
-  QString stylesheet = QLatin1String(stylesheet_file.readAll());
-
-  m_app.setStyle(QStyleFactory::create("Fusion"));
-  m_app.setStyleSheet(stylesheet);
-
-  auto pal = qApp->palette();
-  pal.setBrush(QPalette::Background, QColor("#001A2024"));
-  pal.setBrush(QPalette::Base, QColor("#12171A"));          // lineedit bg
-  pal.setBrush(QPalette::Button, QColor("#12171A"));        // lineedit bg
-  pal.setBrush(QPalette::AlternateBase, QColor("#1f2a30")); // alternate bg
-  pal.setBrush(QPalette::Highlight, QColor("#3d8ec9"));     // tableview bg
-  pal.setBrush(QPalette::WindowText, QColor("silver"));     // color
-  pal.setBrush(QPalette::Text, QColor("silver"));           // color
-  pal.setBrush(QPalette::ButtonText, QColor("silver"));     // color
-  pal.setBrush(QPalette::Light, QColor("#666666"));
-  pal.setBrush(QPalette::Midlight, QColor("#666666"));
-  pal.setBrush(QPalette::Mid, QColor("#666666"));
-  pal.setBrush(QPalette::Dark, QColor("#666666"));
-  pal.setBrush(QPalette::Shadow, QColor("#666666"));
-
-  QFont f("Ubuntu", 10);
-  qApp->setFont(f);
-
-  qApp->setPalette(pal);
-*/
-#if __has_include(<QQuickStyle>)
-  QQuickStyle::setStyle(":/desktopqqc2style/Desktop");
-#endif
 }
 
 
@@ -162,62 +123,16 @@ const score::ApplicationComponents& Application::components() const
   return m_presenter->applicationComponents();
 }
 
-static QPixmap writeVersionName()
-{
-  QImage pixmap = score::get_image(":/splash.png");
-
-  QPainter painter;
-  if (!painter.begin(&pixmap))
-  {
-    return QPixmap::fromImage(pixmap);
-  }
-
-  painter.setRenderHint(QPainter::Antialiasing, true);
-  painter.setRenderHint(QPainter::TextAntialiasing, true);
-  painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
-  painter.setPen(QPen(QColor("#0092CF")));
-  QFont f("Ubuntu", 8, QFont::Light);
-  f.setHintingPreference(QFont::HintingPreference::PreferFullHinting);
-  f.setStyleStrategy(QFont::PreferAntialias);
-  painter.setFont(f);
-  painter.drawText(QPointF(270, 265), QCoreApplication::applicationVersion());
-  painter.end();
-
-  return QPixmap::fromImage(pixmap);
-}
-
 void Application::init()
 {
 #if defined(SCORE_STATIC_PLUGINS)
   score_init_static_plugins();
 #endif
   score::setQApplicationMetadata();
-#if !defined(SCORE_DEBUG) && !defined(__EMSCRIPTEN__)
-#  define SCORE_SPLASH_SCREEN 1
-#endif
-#if defined(SCORE_SPLASH_SCREEN)
-  QSplashScreen* splash{};
-  if (m_applicationSettings.gui)
-  {
-    splash = new QSplashScreen{writeVersionName(), Qt::FramelessWindowHint};
-    splash->show();
-  }
-#endif
 
   this->setObjectName("Application");
   this->setParent(m_app);
-#if !defined(__EMSCRIPTEN__)
   m_app->addLibraryPath(m_app->applicationDirPath() + "/plugins");
-#endif
-#if defined(_MSC_VER)
-  QDir::setCurrent(qApp->applicationDirPath());
-  auto path = qgetenv("PATH");
-  path += ";" + QCoreApplication::applicationDirPath();
-  path += ";" + QCoreApplication::applicationDirPath() + "/plugins";
-  qputenv("PATH", path);
-  SetDllDirectoryW((wchar_t*)QCoreApplication::applicationDirPath().utf16());
-  SetDllDirectoryW((wchar_t*)(QCoreApplication::applicationDirPath() + "/plugins").utf16());
-#endif
 
   // MVP
   if (m_applicationSettings.gui)
@@ -237,20 +152,7 @@ void Application::init()
   // View
   if (m_applicationSettings.gui)
   {
-#if !defined(__EMSCRIPTEN__)
     m_view->show();
-#else
-    m_view->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-    m_view->showFullScreen();
-#endif
-
-#if defined(SCORE_SPLASH_SCREEN)
-    if (splash)
-    {
-      splash->finish(m_view);
-      splash->deleteLater();
-    }
-#endif
   }
 
   initDocuments();

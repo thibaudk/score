@@ -50,14 +50,12 @@ View::~View()
 View::View(QObject* parent) : QMainWindow{}, m_tabWidget{new QTabWidget}
 {
   setObjectName("View");
-  this->setWindowIcon(QIcon("://ossia-score.png"));
-
-  QString version = QString{"%1.%2.%3-%4"}
+  setWindowIcon(QIcon("://ossia-score.png"));
+  QString version = QString{"%1.%2.%3"}
                         .arg(SCORE_VERSION_MAJOR)
                         .arg(SCORE_VERSION_MINOR)
-                        .arg(SCORE_VERSION_PATCH)
-                        .arg(SCORE_VERSION_EXTRA);
-  auto title = tr("score - %1").arg(version);
+                        .arg(SCORE_VERSION_PATCH);
+  auto title = tr("SEGMent - %1").arg(version);
   this->setWindowIconText(title);
   this->setWindowTitle(title);
   m_tabWidget->setObjectName("Documents");
