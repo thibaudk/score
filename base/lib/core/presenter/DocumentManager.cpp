@@ -309,7 +309,6 @@ bool DocumentManager::saveDocumentAs(Document& doc)
         savename += ".segment";
       QSaveFile f{savename};
       f.open(QIODevice::WriteOnly);
-      doc.metadata().setFileName(savename);
 
       QJsonDocument json_doc;
       json_doc.setObject(doc.saveAsJson());
@@ -320,6 +319,7 @@ bool DocumentManager::saveDocumentAs(Document& doc)
 
       m_recentFiles->addRecentFile(savename);
       saveRecentFilesState();
+      doc.metadata().setFileName(savename);
     }
     return true;
   }
