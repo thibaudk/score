@@ -44,13 +44,13 @@ if(APPLE)
     find_library(FLIB Foundation)
     target_link_libraries(${APPNAME} PRIVATE ${CFLIB} ${FLIB})
 
-    # if(DEPLOYMENT_BUILD)
-    #   set(ICON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../lib/resources/score.icns")
-    #   set_source_files_properties(${ICON_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-    #
-    #   target_sources(${APPNAME} PRIVATE ${ICON_SRC})
-    #   set_target_properties(${APPNAME} PROPERTIES MACOSX_BUNDLE TRUE)
-    # endif()
+    if(DEPLOYMENT_BUILD)
+      set(ICON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../lib/resources/score.icns")
+      set_source_files_properties(${ICON_SRC} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+
+      target_sources(${APPNAME} PRIVATE ${ICON_SRC})
+      set_target_properties(${APPNAME} PROPERTIES MACOSX_BUNDLE TRUE)
+    endif()
 endif()
 
 include(StaticApp.cmake)

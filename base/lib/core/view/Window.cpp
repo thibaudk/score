@@ -51,10 +51,10 @@ View::View(QObject* parent) : QMainWindow{}, m_tabWidget{new QTabWidget}
 {
   setObjectName("View");
   setWindowIcon(QIcon("://ossia-score.png"));
-  QString version = QString{"%1.%2.%3"}
+  QString version = QString{"%1.%2 - %3"}
                         .arg(SCORE_VERSION_MAJOR)
                         .arg(SCORE_VERSION_MINOR)
-                        .arg(SCORE_VERSION_PATCH);
+                        .arg(QDateTime::currentDateTime().toString("dd MMMM"));
   auto title = tr("SEGMent - %1").arg(version);
   this->setWindowIconText(title);
   this->setWindowTitle(title);
