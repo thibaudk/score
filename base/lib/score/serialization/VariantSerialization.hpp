@@ -199,6 +199,7 @@ void VariantJSONSerializer<T>::operator()()
   if (auto res = var.template target<TheClass>())
   {
     s.obj[Metadata<Json_k, TheClass>::get()] = readFrom_eggs_impl(*res);
+    s.obj["Which"] = Metadata<Json_k, TheClass>::get();
     done = true;
   }
 }
