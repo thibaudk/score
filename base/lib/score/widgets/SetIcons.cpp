@@ -4,7 +4,7 @@
 
 #include <QHash>
 #include <score/widgets/Pixmap.hpp>
-#include <hopscotch_map.h>
+#include <tsl/hopscotch_map.h>
 
 namespace std
 {

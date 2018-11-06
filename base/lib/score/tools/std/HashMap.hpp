@@ -1,7 +1,7 @@
 #pragma once
 #include <ossia/detail/config.hpp>
 
-#include <hopscotch_map.h>
+#include <tsl/hopscotch_map.h>
 #include <score/serialization/IsTemplate.hpp>
 namespace score
 {

@@ -1,7 +1,7 @@
 #pragma once
 #include <score/tools/std/IndirectContainer.hpp>
 #include <score/model/IdentifiedObject.hpp>
-#include <hopscotch_map.h>
+#include <tsl/hopscotch_map.h>
 #include <vector>
 #include <list>
 // This file contains a fast map for items based on their identifier,

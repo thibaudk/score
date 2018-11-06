@@ -11,7 +11,8 @@ set(CMAKE_MODULE_PATH
 
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_MODULE_PATH}")
 if(APPLE AND EXISTS /usr/local/opt/qt5)
-  list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
+    list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/qt5")
+    list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/boost")
 endif()
 
 set(SCORE_CONFIGURATION segment)
@@ -96,17 +97,21 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/API/OSSIA")
 include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/variant/include")
 include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/nano-signal-slot")
 include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/brigand")
-include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/hopscotch-map/src")
+include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/hopscotch-map/include")
 include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/nano-signal-slot/include")
 include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/readerwriterqueue")
 include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/verdigris/src")
-include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/fmt")
+include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/fmt/include")
 include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/brigand/include")
 include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/exprtk")
 include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/spdlog/include")
 include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/flat/include")
 include_directories(SYSTEM "${OSSIA_3RDPARTY_FOLDER}/multi_index/include")
 include_directories(SYSTEM "${3RDPARTY_FOLDER}/miniz")
+
+score_write_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/ossia_export.h"
+    "#ifndef OSSIA_EXPORT_H\n#define OSSIA_EXPORT_H\n#define OSSIA_EXPORT\n#endif\n")
 
 set(SCORE_PLUGINS_LIST CACHE INTERNAL "List of plugins") # todo libraries, components ?
 set(SCORE_GLOBAL_COMPONENTS_LIST CACHE INTERNAL "List of components") # todo libraries, components ?
