@@ -47,4 +47,4 @@ This section provides short technical highlights on different operations in *Sco
 
 ## Further documentation
 
-Some informations may be missing from the documentation as new features get implemented in *Score*. Further assitance can be obtained from the [Ossia forum](https://forum.ossia.io/) or by joining *Score*'s [Gitter chat room](https://gitter.im/OSSIA/score?source=orgpage)
+Some informations may be missing from the documentation as new features get implemented in *Score*. Further assitance can be obtained from the [Ossia forum](https://forum.ossia.io/) or by joining *Score*'s [Gitter chat room](https://gitter.im/ossia/score?source=orgpage)
