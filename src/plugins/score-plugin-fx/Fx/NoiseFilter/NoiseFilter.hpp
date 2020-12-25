@@ -8,16 +8,23 @@
 class NoiseFilter
 {
   public:
-    NoiseFilter(const double frequency = 120,
-    const double mincutoff = 1,
-    const double beta = 1,
-    const double dcutoff = 1)
-      : f{frequency},
-        m{mincutoff},
-        b{beta},
-        d{dcutoff}{}
+    NoiseFilter(float frequency = 120,
+    float mincutoff = 1,
+    float beta = 1,
+    float dcutoff = 1)
+      : one_euro_i{frequency, (int) mincutoff, (int) beta, (int) dcutoff},
+        one_euro_f{frequency, mincutoff, beta, dcutoff},
+        one_euro_i{frequency, (int) mincutoff, (int) beta, (int) dcutoff},
+        one_euro_i{frequency, (int) mincutoff, (int) beta, (int) dcutoff},
+        one_euro_i{frequency, (int) mincutoff, (int) beta, (int) dcutoff},
+        one_euro_i{frequency, (int) mincutoff, (int) beta, (int) dcutoff}{}
 
-    ossia::value filter(const ossia::value& val, const float& amt)
+    float f;
+    float m;
+    float b;
+    float d;
+
+    ossia::value filter(const ossia::value& val)
     {
       struct vis
       {
@@ -26,7 +33,7 @@ class NoiseFilter
 
           ossia::value operator()(int i) const
           {
-            return i;
+            return one_euro_i(i,1);
           }
           ossia::value operator()(float f) const
           {
@@ -81,34 +88,26 @@ class NoiseFilter
     }
 
   private :
+    one_euro_filter<int> one_euro_i;
 
-    const double f;
-    const double m;
-    const double b;
-    const double d;
-
-    one_euro_filter<> one_euro_f{f, m, b, d};
-    one_euro_filter<int> one_euro_i{f, (int) m, (int) b, (int) d};
-
-    one_euro_filter<const ossia::vec2f&> one_euro_v2{
-      f, ossia::vec2f{(float) m, (float) m},
-      ossia::vec2f{(float) b, (float) b},
-      ossia::vec2f{(float) d, (float) d}};
-
-//    one_euro_filter<ossia::vec3f> one_euro_v3{
-//      f, ossia::vec3f{(float) m, (float) m, (float) m},
-//      ossia::vec3f{(float) b, (float) b, (float) b},
-//      ossia::vec3f{(float) d, (float) d, (float) d}};
-
-//    one_euro_filter<ossia::vec4f> one_euro_v4{
-//      f, ossia::vec4f{(float) m, (float) m, (float) m, (float) m},
-//      ossia::vec4f{(float) b, (float) b, (float) b, (float) b},
-//      ossia::vec4f{(float) d, (float) d, (float) d, (float) d}};
-
-    one_euro_filter<std::vector<ossia::value>> one_euro_v{
-      f, std::vector<ossia::value>{m},
-      std::vector<ossia::value>{b},
-      std::vector<ossia::value>{d}};
+//    static one_euro_filter<float> one_euro_f{frequency, mincutoff,
+//          beta, dcutoff},
+//    static one_euro_filter<ossia::vec2f> one_euro_v2{
+//      frequency, ossia::vec2f{mincutoff},
+//      ossia::vec2f{beta},
+//      ossia::vec2f{dcutoff}},
+//    static one_euro_filter<ossia::vec3f> one_euro_v3{
+//      frequency, ossia::vec3f{mincutoff},
+//      ossia::vec3f{beta},
+//      ossia::vec3f{dcutoff}},
+//    static one_euro_filter<ossia::vec4f> one_euro_v4{
+//      frequency, ossia::vec4f{mincutoff},
+//      ossia::vec4f{beta},
+//      ossia::vec4f{dcutoff}},
+//    static one_euro_filter<std::vector<ossia::value>> one_euro_v{
+//      frequency, std::vector<ossia::value>{mincutoff},
+//      std::vector<ossia::value>{beta},
+//      std::vector<ossia::value>{dcutoff}}
 };
 
 #endif // NOISEFILTER_H

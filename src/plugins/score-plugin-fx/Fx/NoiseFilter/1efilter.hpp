@@ -11,7 +11,7 @@ For details, see http://www.lifl.fr/~casiez/1euro
 
 template <typename T = double>
 struct low_pass_filter {
-	low_pass_filter() : hatxprev(0), xprev(0), hadprev(false) {}
+  low_pass_filter() : hatxprev{0}, xprev{0}, hadprev(false) {}
 	T operator()(T x, T alpha) {
 		T hatx;
 		if(hadprev) {

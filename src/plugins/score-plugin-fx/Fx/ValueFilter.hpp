@@ -2,7 +2,7 @@
 #include <Engine/Node/PdNode.hpp>
 #include "NoiseFilter/NoiseFilter.hpp"
 
-namespace Nodes::Smoother
+namespace Nodes::ValueFilter
 {
 struct Node
 {
@@ -42,7 +42,7 @@ struct Node
       ossia::value smooth(const ossia::value& value, const std::string& smoothType, const float& amount)
       {
         if (smoothType == "1Euro")
-          return nf.filter(value, amount);
+          return nf.filter(value);
         else if (smoothType == "Average");
       }
   };
