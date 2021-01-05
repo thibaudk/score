@@ -1,6 +1,6 @@
 #pragma once
 #include <Engine/Node/PdNode.hpp>
-#include "NoiseFilter/NoiseFilter.hpp"
+#include "NoiseFilter.hpp"
 
 namespace Nodes::ValueFilter
 {
