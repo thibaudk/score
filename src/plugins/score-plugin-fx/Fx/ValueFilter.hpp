@@ -5,9 +5,25 @@
 namespace Nodes::ValueFilter
 {
 struct Node
-{
+{    
     struct NoiseFilter
     {
+        NoiseFilter()
+          : dno_i{},
+            dno_f{},
+//            dno_v2{},
+//            dno_v3{},
+//            dno_v4{},
+            dno_v{}
+        {}
+
+        DeNoiser<int> dno_i;
+        DeNoiser<float> dno_f;
+//        DeNoiser<ossia::vec2f> dno_v2;
+//        DeNoiser<ossia::vec3f> dno_v3;
+//        DeNoiser<ossia::vec4f> dno_v4;
+        DeNoiser<std::vector<ossia::value>> dno_v;
+
         ossia::value filter(const ossia::value& val)
         {
           struct vis
@@ -35,35 +51,32 @@ struct Node
 
               ossia::value operator()(const ossia::vec2f& t) const
               {
+                // return nFilt->dno_v2(t);
                 return t;
               }
 
               ossia::value operator()(const ossia::vec3f& t) const
               {
+                // return nFilt->dno_v3(t);
                 return t;
               }
 
               ossia::value operator()(const ossia::vec4f& t) const
               {
+                // return nFilt->dno_v4(t);
                 return t;
               }
 
               ossia::value operator()(const std::vector<ossia::value>& t) const
               {
-                std::vector<ossia::value> res;
-
-                for (auto& v : t)
-                {
-                  res.push_back(ossia::apply(*this, v.v));
-                }
-
-                return res;
+                // return nFilt->dno_v(t);
+                return t;
               }
 
               NoiseFilter* nFilt;
 
-              vis(NoiseFilter* enclosing)
-                : nFilt{enclosing}
+              vis(NoiseFilter* parent)
+                : nFilt{parent}
               {}
           };
 
@@ -78,36 +91,15 @@ struct Node
           return val;
         }
 
-        DeNoiser<int> dno_i;
-        DeNoiser<float> dno_f;
-        DeNoiser<ossia::vec2f> dno_v2;
-        DeNoiser<ossia::vec3f> dno_v3;
-        DeNoiser<ossia::vec4f> dno_v4;
-        DeNoiser<std::vector<ossia::value>> dno_v;
-
-        NoiseFilter(const float frequency = 120,
-                    const float minCutoff = 1,
-                    const float beta = 1,
-                    const float dCutoff = 1)
-          : dno_i{DeNoiser<int>(frequency, minCutoff, beta, dCutoff)},
-            dno_f{DeNoiser<float>(frequency, minCutoff, beta, dCutoff)},
-            dno_v2{DeNoiser<ossia::vec2f>(frequency,
-                                                      ossia::vec2f{minCutoff},
-                                                      ossia::vec2f{beta},
-                                                      ossia::vec2f{dCutoff})},
-            dno_v3{DeNoiser<ossia::vec3f>(frequency,
-                                                      ossia::vec3f{minCutoff},
-                                                      ossia::vec3f{beta},
-                                                      ossia::vec3f{dCutoff})},
-            dno_v4{DeNoiser<ossia::vec4f>(frequency,
-                                                      ossia::vec4f{minCutoff},
-                                                      ossia::vec4f{beta},
-                                                      ossia::vec4f{dCutoff})},
-            dno_v{DeNoiser<std::vector<ossia::value>>(frequency,
-                                                                  std::vector<ossia::value>{minCutoff},
-                                                                  std::vector<ossia::value>{beta},
-                                                                  std::vector<ossia::value>{dCutoff})}
-        {}
+        void setAmount(const float& amt)
+        {
+          dno_i.setAmount(amt);
+          dno_f.setAmount(amt);
+//          dno_v2.setAmount(amt);
+//          dno_v3.setAmount(amt);
+//          dno_v4.setAmount(amt);
+          dno_v.setAmount(amt);
+        }
     };
 
         struct Metadata : Control::Meta_base
@@ -127,10 +119,10 @@ struct Node
                     0U,
                     ossia::make_array(
                       "1Euro",
-                      "Exp"
-              "Average",
+                      "Exp",
+                      "Average",
                       "None")),
-                  Control::FloatSlider{"amount", 0., 1., .5},
+                  Control::FloatSlider{"amount", 0., 1., 0.1},
                   Control::Toggle{"rate", false},
                   Control::IntSpinBox{"ms.", 0, 100, 0},
                   Control::Widgets::QuantificationChooser());
@@ -142,12 +134,15 @@ struct Node
         struct State
         {
             NoiseFilter nf{};
+            float prevAmount{0.1};
 
-            ossia::value smooth(const ossia::value& value, const std::string& smoothType, const float& amount)
+            ossia::value smooth(const ossia::value& value,
+                                const std::string& smoothType,
+                                const float& amount)
             {
-              if (smoothType == "1Euro")
-                return nf.filter(value);
-              else if (smoothType == "Average");
+              if (prevAmount != amount) nf.setAmount(amount);
+
+              return nf.filter(value);
             }
         };
 
@@ -203,8 +198,8 @@ struct Node
           auto type_item = makeControl(
                 std::get<0>(Metadata::controls), type, parent, context, doc, portFactory);
           type_item.root.setPos(tMarg, 0);
-          type_item.control.rows = 1;
-          type_item.control.columns = 4;
+          type_item.control.rows = 2;
+          type_item.control.columns = 2;
           type_item.control.setRect(QRectF{0, 0, 200, 25});
 
           auto amount_item = makeControl(
