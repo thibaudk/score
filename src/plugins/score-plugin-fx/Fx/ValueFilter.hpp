@@ -11,17 +11,17 @@ struct Node
         NoiseFilter()
           : dno_i{},
             dno_f{},
-//            dno_v2{},
-//            dno_v3{},
-//            dno_v4{},
+            dno_v2{},
+            dno_v3{},
+            dno_v4{},
             dno_v{}
         {}
 
         DeNoiser<int> dno_i;
         DeNoiser<float> dno_f;
-//        DeNoiser<ossia::vec2f> dno_v2;
-//        DeNoiser<ossia::vec3f> dno_v3;
-//        DeNoiser<ossia::vec4f> dno_v4;
+        DeNoiser<ossia::vec2f> dno_v2;
+        DeNoiser<ossia::vec3f> dno_v3;
+        DeNoiser<ossia::vec4f> dno_v4;
         DeNoiser<std::vector<ossia::value>> dno_v;
 
         ossia::value filter(const ossia::value& val)
@@ -95,9 +95,9 @@ struct Node
         {
           dno_i.setAmount(amt);
           dno_f.setAmount(amt);
-//          dno_v2.setAmount(amt);
-//          dno_v3.setAmount(amt);
-//          dno_v4.setAmount(amt);
+          dno_v2.setAmount(amt);
+          dno_v3.setAmount(amt);
+          dno_v4.setAmount(amt);
           dno_v.setAmount(amt);
         }
     };
