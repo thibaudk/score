@@ -1,6 +1,6 @@
 #pragma once
 #include <Engine/Node/PdNode.hpp>
-#include <libossia/3rdparty/dno/src/DeNoiser.hpp>
+#include <libossia/3rdparty/dno/DeNoiser.hpp>
 
 namespace Nodes::ValueFilter
 {
