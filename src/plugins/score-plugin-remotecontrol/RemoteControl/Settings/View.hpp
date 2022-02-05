@@ -18,15 +18,18 @@ class View : public score::GlobalSettingsView
   W_OBJECT(View)
 public:
   View();
-  void setEnabled(bool);
+  void setNetEnabled(bool);
+  void setHwEnabled(bool);
 
-  void enabledChanged(bool b) W_SIGNAL(enabledChanged, b);
+  void netEnabledChanged(bool b) W_SIGNAL(netEnabledChanged, b);
+  void hwEnabledChanged(bool b) W_SIGNAL(hwEnabledChanged, b);
 
 private:
   QWidget* getWidget() override;
   score::FormWidget* m_widg{};
 
-  QCheckBox* m_enabled{};
+  QCheckBox* m_netEnabled{};
+  QCheckBox* m_hwEnabled{};
 };
 
 }

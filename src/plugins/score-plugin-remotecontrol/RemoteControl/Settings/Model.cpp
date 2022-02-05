@@ -11,10 +11,15 @@ namespace Settings
 
 namespace Parameters
 {
-SETTINGS_PARAMETER_IMPL(Enabled){QStringLiteral("RemoteControl/Enabled"), false};
+SETTINGS_PARAMETER_IMPL(NetEnabled){
+    QStringLiteral("RemoteControl/Enabled on Network"),
+    false};
+SETTINGS_PARAMETER_IMPL(HwEnabled){
+  QStringLiteral("RemoteControl/Enabled on hardware"),
+      false};
 static auto list()
 {
-  return std::tie(Enabled);
+  return std::tie(NetEnabled, HwEnabled);
 }
 }
 
@@ -23,6 +28,7 @@ Model::Model(QSettings& set, const score::ApplicationContext& ctx)
   score::setupDefaultSettings(set, Parameters::list(), *this);
 }
 
-SCORE_SETTINGS_PARAMETER_CPP(bool, Model, Enabled)
+SCORE_SETTINGS_PARAMETER_CPP(bool, Model, NetEnabled)
+SCORE_SETTINGS_PARAMETER_CPP(bool, Model, HwEnabled)
 }
 }

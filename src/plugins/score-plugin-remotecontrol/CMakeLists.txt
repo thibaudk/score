@@ -28,6 +28,7 @@ set(HDRS
   "RemoteControl/Settings/View.hpp"
   "RemoteControl/Settings/Presenter.hpp"
   "RemoteControl/Settings/Factory.hpp"
+  "RemoteControl/Hardware/MidiController.hpp"
   "RemoteControl/ApplicationPlugin.hpp"
   "RemoteControl/DocumentPlugin.hpp"
   "i-score-remote/RemoteApplication.hpp"
@@ -45,6 +46,8 @@ set(SRCS
 "${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Scenario/Sync.cpp"
 "${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Scenario/State.cpp"
 
+"${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Hardware/MidiController.cpp"
+
 "${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/ApplicationPlugin.cpp"
 "${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/DocumentPlugin.cpp"
 
@@ -53,7 +56,11 @@ set(SRCS
 
 add_library(${PROJECT_NAME} ${SRCS} ${HDRS} ${QRCS})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC score_plugin_scenario score_plugin_js ${QT_PREFIX}::WebSockets)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    score_plugin_scenario
+    score_plugin_js
+    libremidi
+    ${QT_PREFIX}::WebSockets)
 
 setup_score_plugin(${PROJECT_NAME})
 

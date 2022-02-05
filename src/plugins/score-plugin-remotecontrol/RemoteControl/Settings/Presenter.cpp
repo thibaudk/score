@@ -20,18 +20,27 @@ Presenter::Presenter(Model& m, View& v, QObject* parent)
 {
   {
     // view -> model
-    con(v, &View::enabledChanged, this, [&](auto val) {
-      if(val != m.getEnabled())
+    con(v, &View::netEnabledChanged, this, [&](auto val) {
+      if (val != m.getNetEnabled())
       {
-        m_disp.submit<SetModelEnabled>(this->model(this), val);
+        m_disp.submit<SetModelNetEnabled>(this->model(this), val);
+      }
+    });
+
+    con(v, &View::hwEnabledChanged, this, [&](auto val) {
+      if (val != m.getHwEnabled())
+      {
+        m_disp.submit<SetModelHwEnabled>(this->model(this), val);
       }
     });
 
     // model -> view
-    con(m, &Model::EnabledChanged, &v, &View::setEnabled);
+    con(m, &Model::NetEnabledChanged, &v, &View::setNetEnabled);
+    con(m, &Model::HwEnabledChanged, &v, &View::setHwEnabled);
 
     // initial value
-    v.setEnabled(m.getEnabled());
+    v.setNetEnabled(m.getNetEnabled());
+    v.setHwEnabled(m.getHwEnabled());
   }
 }
 

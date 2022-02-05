@@ -18,40 +18,67 @@ View::View()
   auto lay = m_widg->layout();
 
   {
-    m_enabled = new QCheckBox{tr("Enabled")};
+    m_netEnabled = new QCheckBox{tr("Enable on network")};
 
-    connect(m_enabled, &QCheckBox::stateChanged, this, [&](int t) {
-      switch(t)
+    connect(m_netEnabled, &QCheckBox::stateChanged, this, [&](int t) {
+      switch (t)
       {
         case Qt::Unchecked:
-          enabledChanged(false);
+          netEnabledChanged(false);
           break;
         case Qt::Checked:
-          enabledChanged(true);
+          netEnabledChanged(true);
           break;
         default:
           break;
       }
     });
 
-    lay->addRow(m_enabled);
+    lay->addRow(m_netEnabled);
+  }
+
+  {
+    m_hwEnabled = new QCheckBox{tr("Enable on hardware")};
+
+    connect(m_hwEnabled, &QCheckBox::stateChanged, this, [&](int t) {
+      if(t == Qt::Unchecked)
+        hwEnabledChanged(false);
+      else
+        hwEnabledChanged(true);
+    });
+
+    lay->addRow(m_hwEnabled);
   }
 }
 
-void View::setEnabled(bool val)
+void View::setNetEnabled(bool val)
 {
-  switch(m_enabled->checkState())
+  switch (m_netEnabled->checkState())
   {
     case Qt::Unchecked:
-      if(val)
-        m_enabled->setChecked(true);
+      if (val)
+        m_netEnabled->setChecked(true);
       break;
     case Qt::Checked:
-      if(!val)
-        m_enabled->setChecked(false);
+      if (!val)
+        m_netEnabled->setChecked(false);
       break;
     default:
       break;
+  }
+}
+
+void View::setHwEnabled(bool val)
+{
+  if (val)
+  {
+    if (m_hwEnabled->checkState() == Qt::Unchecked)
+      m_hwEnabled->setChecked(true);
+  }
+  else
+  {
+    if (m_hwEnabled->checkState() == Qt::Checked)
+      m_hwEnabled->setChecked(false);
   }
 }
 

@@ -25,26 +25,32 @@
 #include <RemoteControl/Scenario/Scenario.hpp>
 #include <RemoteControl/Settings/Model.hpp>
 
+#include <RemoteControl/Hardware/MidiController.hpp>
+#include <Scenario/Application/ScenarioActions.hpp>
+
 namespace RemoteControl
 {
 using namespace std::literals;
 DocumentPlugin::DocumentPlugin(const score::DocumentContext& doc, QObject* parent)
     : score::DocumentPlugin{doc, "RemoteControl::DocumentPlugin", parent}
     , receiver{doc, 10212}
+    , controller{doc}
 {
   auto& set = m_context.app.settings<Settings::Model>();
-  if(set.getEnabled())
+  if (set.getNetEnabled())
   {
     create();
   }
 
   con(
-      set, &Settings::Model::EnabledChanged, this,
-      [this](bool b) {
-    if(b)
-      create();
-    else
-      cleanup();
+      set,
+      &Settings::Model::NetEnabledChanged,
+      this,
+      [=](bool b) {
+        if (b)
+          create();
+        else
+          cleanup();
       },
       Qt::QueuedConnection);
 
