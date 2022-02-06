@@ -13,7 +13,7 @@
 #include <nano_observer.hpp>
 #include <score_plugin_remotecontrol_export.h>
 
-#include <RemoteControl/Hardware/MidiController.hpp>
+#include <RemoteControl/Hardware/Hardware.hpp>
 
 template <typename T>
 class TreeNode;
@@ -138,7 +138,7 @@ public:
   void on_documentClosing() override;
 
   Receiver receiver;
-  MidiController controller;
+  Hardware hardware;
 
 private:
   void create();

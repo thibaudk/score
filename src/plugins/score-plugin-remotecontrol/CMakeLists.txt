@@ -28,7 +28,11 @@ set(HDRS
   "RemoteControl/Settings/View.hpp"
   "RemoteControl/Settings/Presenter.hpp"
   "RemoteControl/Settings/Factory.hpp"
+
+  "RemoteControl/Hardware/Hardware.hpp"
+  "RemoteControl/Hardware/Controller.hpp"
   "RemoteControl/Hardware/MidiController.hpp"
+
   "RemoteControl/ApplicationPlugin.hpp"
   "RemoteControl/DocumentPlugin.hpp"
   "i-score-remote/RemoteApplication.hpp"
@@ -46,6 +50,8 @@ set(SRCS
 "${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Scenario/Sync.cpp"
 "${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Scenario/State.cpp"
 
+"${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Hardware/Hardware.cpp"
+"${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Hardware/Controller.cpp"
 "${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/Hardware/MidiController.cpp"
 
 "${CMAKE_CURRENT_SOURCE_DIR}/RemoteControl/ApplicationPlugin.cpp"

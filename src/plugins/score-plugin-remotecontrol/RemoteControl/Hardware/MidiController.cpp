@@ -1,22 +1,44 @@
-#include <Explorer/DocumentPlugin/DeviceDocumentPlugin.hpp>
-
 #include <libremidi/libremidi.hpp>
 
 #include "MidiController.hpp"
 
 namespace RemoteControl {
 
-MidiController::MidiController(const score::DocumentContext& doc)
-  : m_dev{doc.plugin<Explorer::DeviceDocumentPlugin>()}
-  , m_output{}
+MidiController::MidiController()
+  : m_output{}
   , m_input{}
 {
-  setup();
+  m_input.set_callback([this](const libremidi::message& message) {
+
+    if (message.get_message_type() == libremidi::message_type::CONTROL_CHANGE)
+      switch (message.bytes[1])
+      {
+      case 80:
+        shift = message.bytes[2] > 0;
+        break;
+      case 29:
+        if (message.bytes[2] > 0)
+          onCommand(Controller::Play, shift);
+        break;
+      case 19:
+        if (message.bytes[2] > 0)
+          onCommand(Controller::Stop, shift);
+        break;
+      default:
+        break;
+      }
+  });
 }
 
-void MidiController::setup()
+MidiController::~MidiController()
 {
-  openPortByName(m_output);
+  m_input.close_port();
+  m_output.close_port();
+}
+
+void MidiController::setup(const QString& deviceName)
+{
+  openPortByName(m_output, deviceName);
 
   if (m_output.is_port_open())
   {
@@ -26,20 +48,17 @@ void MidiController::setup()
 
     msg[0] = 144;
 
-    int notes[]{49, 39, 29, 19};
-    int colors[]{64, 64, 9, 9};
+    int notes[]{29, 19};
+    int colors[]{64, 9};
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 2; i++)
     {
-      msg[1] = notes[i];
-      msg[2] = 0;
-      m_output.send_message(msg);
       msg[1] = notes[i];
       msg[2] = colors[i];
       m_output.send_message(msg);
     }
 
-    openPortByName(m_input);
+    openPortByName(m_input, deviceName);
   }
 }
 

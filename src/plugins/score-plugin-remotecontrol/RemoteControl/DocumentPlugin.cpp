@@ -28,13 +28,15 @@
 #include <RemoteControl/Hardware/MidiController.hpp>
 #include <Scenario/Application/ScenarioActions.hpp>
 
+#include <RemoteControl/Hardware/Hardware.hpp>
+
 namespace RemoteControl
 {
 using namespace std::literals;
 DocumentPlugin::DocumentPlugin(const score::DocumentContext& doc, QObject* parent)
     : score::DocumentPlugin{doc, "RemoteControl::DocumentPlugin", parent}
     , receiver{doc, 10212}
-    , controller{doc}
+    , hardware{doc}
 {
   auto& set = m_context.app.settings<Settings::Model>();
   if (set.getNetEnabled())
@@ -53,6 +55,25 @@ DocumentPlugin::DocumentPlugin(const score::DocumentContext& doc, QObject* paren
           cleanup();
       },
       Qt::QueuedConnection);
+
+  con(
+        set,
+        &Settings::Model::HwEnabledChanged,
+        this,
+        [&](bool b) {
+    if (b)
+    {
+      hardware.setupController();
+      if (!set.getNetEnabled())
+        create();
+    }
+    else
+    {
+      if (!set.getHwEnabled())
+       cleanup();
+    }
+  },
+  Qt::QueuedConnection);
 
   // TODO put this as a setting instead
   startTimer(100);

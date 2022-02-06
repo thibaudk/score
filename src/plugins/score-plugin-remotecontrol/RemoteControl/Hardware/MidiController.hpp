@@ -1,9 +1,12 @@
 #ifndef MIDICONTROLLER_HPP
 #define MIDICONTROLLER_HPP
 
-#include <score_plugin_remotecontrol_export.h>
+#include <Scenario/Application/ScenarioActions.hpp>
+#include <score/actions/ActionManager.hpp>
 
 #include <libremidi/libremidi.hpp>
+
+#include "Controller.hpp"
 
 namespace Explorer
 {
@@ -13,22 +16,22 @@ class DeviceDocumentPlugin;
 namespace RemoteControl
 {
 
-class SCORE_PLUGIN_REMOTECONTROL_EXPORT MidiController
-    : public QObject
-    , Nano::Observer
+class MidiController : public Controller
 {
 public:
-  MidiController(const score::DocumentContext& doc);
+  MidiController();
 
-  ~MidiController() = default;
+  ~MidiController();
+
+  void setup(const QString& deviceName = " Launchpad Pro Standalone Port");
+
+  std::function<void(Controller::Comands, const bool&)> onCommand;
 
 private:
-  Explorer::DeviceDocumentPlugin& m_dev;
-
-  void setup();
+  bool shift{false};
 
   template <typename T>
-  void openPortByName(T& libremidi, const QString& deviceName = " Launchpad Pro Standalone Port");
+  void openPortByName(T& libremidi, const QString& deviceName);
 
   libremidi::midi_out m_output;
   libremidi::midi_in m_input;
