@@ -24,7 +24,7 @@ public:
 
 private:
   Explorer::DeviceDocumentPlugin& m_dev;
-  std::function<void(Controller::Comands, const bool&)> commandCallback;
+  std::function<void(Controller::Commands, const bool&)> commandCallback;
 
   MidiController* ctl{nullptr};
 

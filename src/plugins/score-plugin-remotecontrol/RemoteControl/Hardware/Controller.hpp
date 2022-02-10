@@ -10,7 +10,7 @@ struct Controller
 {
   Controller() = default;
 
-  enum Comands
+  enum Commands
   {
     Play = 0,
     Stop

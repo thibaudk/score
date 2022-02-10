@@ -12,7 +12,7 @@ Hardware::Hardware(const score::DocumentContext& doc)
   , img{new QImage{}}
   , imgPainter{img}
 {
-  commandCallback = [&doc](Controller::Comands com, const bool& shift) {
+  commandCallback = [&doc](Controller::Commands com, const bool& shift) {
     switch (com)
     {
     case Controller::Play:
@@ -36,20 +36,20 @@ Hardware::Hardware(const score::DocumentContext& doc)
 void Hardware::setupController()
 {
   ctl = new MidiController{};
-//  ctl->onCommand = commandCallback;
-//  ctl->setup();
-//  *img = QImage(8, 8, QImage::Format_RGB16);
+  ctl->onCommand = commandCallback;
+  ctl->setup();
+  *img = QImage(8, 8, QImage::Format_RGB16);
 
-//  qDebug() << img->pixel(0, 0);
+  qDebug() << img->pixel(0, 0);
 
-//  imgPainter.begin(img);
-//  imgPainter.scale(1, 1);
+  imgPainter.begin(img);
+  imgPainter.scale(1, 1);
 
-//  imgPainter.setPen(Qt::blue);
-//  imgPainter.drawPoint(0, 0);
-//  imgPainter.end();
+  imgPainter.setPen(Qt::blue);
+  imgPainter.drawPoint(0, 0);
+  imgPainter.end();
 
-//  qDebug() << img->pixel(0, 0);
+  qDebug() << img->pixel(0, 0);
 }
 
 }
