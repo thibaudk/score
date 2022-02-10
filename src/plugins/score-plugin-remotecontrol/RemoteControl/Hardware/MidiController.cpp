@@ -13,14 +13,14 @@ MidiController::MidiController()
     if (message.get_message_type() == libremidi::message_type::CONTROL_CHANGE)
       switch (message.bytes[1])
       {
-      case 80:
+      case SHIFT:
         shift = message.bytes[2] > 0;
         break;
-      case 29:
+      case PLAY:
         if (message.bytes[2] > 0)
           onCommand(Controller::Play, shift);
         break;
-      case 19:
+      case STOP:
         if (message.bytes[2] > 0)
           onCommand(Controller::Stop, shift);
         break;
@@ -44,22 +44,24 @@ void MidiController::setup(const QString& deviceName)
   {
     m_output.send_message(msg);
 
-    msg.erase(msg.begin() + 3, msg.end());
+    u_int8_t notes[]{SHIFT, PLAY, STOP};
+    u_int8_t colors[]{WHITE, GREEN, ORANGE};
 
-    msg[0] = 144;
-
-    int notes[]{29, 19};
-    int colors[]{64, 9};
-
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 3; i++)
     {
-      msg[1] = notes[i];
-      msg[2] = colors[i];
-      m_output.send_message(msg);
+      m_output.send_message(msg.note_on(1, notes[i], colors[i]));
     }
 
     openPortByName(m_input, deviceName);
+
+    gridWidth = NUM_ROWS;
+    gridHeigt = NUM_COLUMNS;
   }
+}
+
+void MidiController::setTileFromRgb(int index, const QRgb& value)
+{
+
 }
 
 template<typename T>

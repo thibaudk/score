@@ -5,13 +5,14 @@
 #include "Hardware.hpp"
 
 namespace RemoteControl {
-
+W_OBJECT_IMPL(Hardware)
 
 Hardware::Hardware(const score::DocumentContext& doc)
   : m_dev{doc.plugin<Explorer::DeviceDocumentPlugin>()}
-  , ctrl{}
+  , img{new QImage{}}
+  , imgPainter{img}
 {
-  ctrl.onCommand = [&doc](Controller::Comands com, const bool& shift) {
+  commandCallback = [&doc](Controller::Comands com, const bool& shift) {
     switch (com)
     {
     case Controller::Play:
@@ -30,6 +31,25 @@ Hardware::Hardware(const score::DocumentContext& doc)
       break;
     }
   };
+}
+
+void Hardware::setupController()
+{
+  ctl = new MidiController{};
+//  ctl->onCommand = commandCallback;
+//  ctl->setup();
+//  *img = QImage(8, 8, QImage::Format_RGB16);
+
+//  qDebug() << img->pixel(0, 0);
+
+//  imgPainter.begin(img);
+//  imgPainter.scale(1, 1);
+
+//  imgPainter.setPen(Qt::blue);
+//  imgPainter.drawPoint(0, 0);
+//  imgPainter.end();
+
+//  qDebug() << img->pixel(0, 0);
 }
 
 }

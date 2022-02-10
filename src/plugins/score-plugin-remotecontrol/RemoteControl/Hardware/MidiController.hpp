@@ -8,6 +8,21 @@
 
 #include "Controller.hpp"
 
+// Macros to temporarly act as the device description file
+#define PROGRAMER_MODE {240, 0, 32, 41, 2, 16, 44, 3, 247}
+
+#define SHIFT 80
+#define PLAY 29
+#define STOP 19
+
+#define WHITE 2
+#define GREEN 64
+#define ORANGE 9
+
+// Rows & Columns
+#define NUM_ROWS 8
+#define NUM_COLUMNS 8
+
 namespace Explorer
 {
 class DeviceDocumentPlugin;
@@ -20,12 +35,15 @@ class MidiController : public Controller
 {
 public:
   MidiController();
-
   ~MidiController();
 
-  void setup(const QString& deviceName = " Launchpad Pro Standalone Port");
-
   std::function<void(Controller::Comands, const bool&)> onCommand;
+
+  void setup(const QString& deviceName = " Launchpad Pro Standalone Port");
+  void setTileFromRgb(int index, const QRgb& value);
+
+  int gridWidth{};
+  int gridHeigt{};
 
 private:
   bool shift{false};
@@ -35,7 +53,7 @@ private:
 
   libremidi::midi_out m_output;
   libremidi::midi_in m_input;
-  std::vector<unsigned char> msg{240, 0, 32, 41, 2, 16, 44, 3, 247};
+  libremidi::message msg PROGRAMER_MODE;
 };
 
 }
