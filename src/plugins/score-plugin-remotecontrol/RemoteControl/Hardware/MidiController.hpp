@@ -37,7 +37,7 @@ public:
   MidiController();
   ~MidiController();
 
-  std::function<void(Controller::Comands, const bool&)> onCommand;
+  std::function<void(Controller::Commands, const bool&)> onCommand;
 
   void setup(const QString& deviceName = " Launchpad Pro Standalone Port");
   void setTileFromRgb(int index, const QRgb& value);
