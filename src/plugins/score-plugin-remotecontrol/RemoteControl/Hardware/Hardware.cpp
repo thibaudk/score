@@ -1,3 +1,5 @@
+#include <wobjectimpl.h>
+
 #include <Explorer/DocumentPlugin/DeviceDocumentPlugin.hpp>
 #include <score/actions/ActionManager.hpp>
 #include <Scenario/Application/ScenarioActions.hpp>
