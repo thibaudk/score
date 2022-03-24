@@ -13,6 +13,8 @@ class SCORE_PLUGIN_REMOTECONTROL_EXPORT Model : public score::SettingsDelegateMo
   bool m_NetEnabled = false;
   bool m_HwEnabled = false;
 
+
+
 public:
   Model(QSettings& set, const score::ApplicationContext& ctx);
 

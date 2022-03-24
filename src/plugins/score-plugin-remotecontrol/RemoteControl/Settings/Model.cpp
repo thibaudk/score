@@ -12,10 +12,10 @@ namespace Settings
 namespace Parameters
 {
 SETTINGS_PARAMETER_IMPL(NetEnabled){
-    QStringLiteral("RemoteControl/Enabled on Network"),
+    QStringLiteral("RemoteControl/Network"),
     false};
 SETTINGS_PARAMETER_IMPL(HwEnabled){
-  QStringLiteral("RemoteControl/Enabled on hardware"),
+  QStringLiteral("RemoteControl/Hardware"),
       false};
 static auto list()
 {
