@@ -1,5 +1,6 @@
 #include <wobjectimpl.h>
 
+#include <score/application/ApplicationContext.hpp>
 #include <Explorer/DocumentPlugin/DeviceDocumentPlugin.hpp>
 #include <score/actions/ActionManager.hpp>
 #include <Scenario/Application/ScenarioActions.hpp>
@@ -38,7 +39,7 @@ Hardware::Hardware(const score::DocumentContext& doc)
 void Hardware::setupController()
 {
   ctl = new MidiController{};
-  ctl->onCommand = commandCallback;
+  ctl->on_command = commandCallback;
   ctl->setup();
   *img = QImage(8, 8, QImage::Format_RGB16);
 

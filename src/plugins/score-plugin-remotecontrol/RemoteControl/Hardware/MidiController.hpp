@@ -37,23 +37,21 @@ public:
   MidiController();
   ~MidiController();
 
-  std::function<void(Controller::Commands, const bool&)> onCommand;
+  std::function<void(Controller::Commands, const bool&)> on_command;
 
   void setup(const QString& deviceName = " Launchpad Pro Standalone Port");
-  void setTileFromRgb(int index, const QRgb& value);
+  void set_tile_from_rgb(int index, const QRgb& value);
 
-  int gridWidth{};
-  int gridHeigt{};
+  int grid_width{};
+  int grid_heigt{};
 
 private:
   bool shift{false};
 
-  template <typename T>
-  void openPortByName(T& libremidi, const QString& deviceName);
+  void open_port_by_name(const QString& deviceName);
 
   libremidi::midi_out m_output;
   libremidi::midi_in m_input;
-  libremidi::message msg PROGRAMER_MODE;
 };
 
 }
